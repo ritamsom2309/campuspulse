@@ -14,24 +14,67 @@ export const getRecommendations = action({
     limit: v.optional(v.number()),
   },
   handler: async (ctx, { userId, limit = 10 }) => {
-    // ── 1. Fetch user ──────────────────────────────────────────────────────────
-    const user = await ctx.runQuery(api.users.getUserById, { userId });
+    const genAIKey = process.env.GEMINI_API_KEY;
+
+    // ── 1. Fetch user & dynamically generate embedding if missing ──────────────────
+    let user = await ctx.runQuery(api.users.getUserById, { userId });
     if (!user) throw new Error("User not found");
 
-    // ── 2. Fetch active events ─────────────────────────────────────────────────
-    const events = await ctx.runQuery(api.events.listActiveEvents, {});
-    const activeEvents = events.filter(
+    if (genAIKey && (!user.embedding || user.embedding.length === 0)) {
+      try {
+        console.log(`[AI recommendations] Dynamically generating vector embedding for user: ${user.name}`);
+        await ctx.runAction(api.recommendations.generateAndStoreUserEmbedding, { userId });
+        // Fetch fresh user profile with populated embedding
+        user = await ctx.runQuery(api.users.getUserById, { userId });
+      } catch (err) {
+        console.error("Failed to generate user embedding dynamically:", err);
+      }
+    }
+
+    // ── 2. Fetch active events & user registrations to exclude already registered events ──
+    const [events, userRegs] = await Promise.all([
+      ctx.runQuery(api.events.listActiveEvents, {}),
+      ctx.runQuery(api.registrations.getUserRegistrations, { userId }),
+    ]);
+
+    const registeredEventIds = new Set(userRegs.map((r) => r.eventId));
+
+    let activeEvents = events.filter(
       (e) =>
-        !e.isArchived && e.registrationDeadline > Date.now()
+        !e.isArchived && e.registrationDeadline > Date.now() && !registeredEventIds.has(e._id)
     );
 
     if (activeEvents.length === 0) return [];
+
+    if (genAIKey) {
+      let generatedAny = false;
+      for (const event of activeEvents) {
+        if (!event.embedding || event.embedding.length === 0) {
+          try {
+            console.log(`[AI recommendations] Dynamically generating vector embedding for event: ${event.title}`);
+            await ctx.runAction(api.recommendations.generateAndStoreEventEmbedding, { eventId: event._id });
+            generatedAny = true;
+          } catch (err) {
+            console.error(`Failed to generate event embedding dynamically for "${event.title}":`, err);
+          }
+        }
+      }
+      if (generatedAny) {
+        // Re-fetch active events to ensure all generated embeddings are in local memory
+        const freshEvents = await ctx.runQuery(api.events.listActiveEvents, {});
+        activeEvents = freshEvents.filter(
+          (e) =>
+            !e.isArchived && e.registrationDeadline > Date.now()
+        );
+      }
+    }
 
     // ── 3. Get friend IDs ──────────────────────────────────────────────────────
     const friendIds = await ctx.runQuery(api.friendships.getFriendIds, { userId });
 
     // ── 4. Build friend activity map ───────────────────────────────────────────
     const eventFriendActivityMap = {};
+    const registeredFriendsMap = {};
     for (const event of activeEvents) {
       const [regs, likes, attendance] = await Promise.all([
         ctx.runQuery(api.registrations.getEventRegistrations, { eventId: event._id }),
@@ -44,10 +87,19 @@ export const getRecommendations = action({
         liked: [], // stored per-user; social inference from friends
         attended: attendance.map((a) => a.userId),
       };
+
+      registeredFriendsMap[event._id] = regs
+        .filter((r) => r.user && friendIds.includes(r.userId))
+        .map((r) => ({
+          _id: r.user._id,
+          name: r.user.name,
+          email: r.user.email,
+          image: r.user.image,
+        }));
     }
 
     // ── 5. Compute recommendations ─────────────────────────────────────────────
-    const recommendations = runRecommendationEngine(
+    const rawRecommendations = runRecommendationEngine(
       user,
       activeEvents,
       friendIds,
@@ -55,8 +107,12 @@ export const getRecommendations = action({
       limit
     );
 
+    const recommendations = rawRecommendations.map((rec) => ({
+      ...rec,
+      registeredFriends: registeredFriendsMap[rec.event._id] || [],
+    }));
+
     // ── 6. Generate and enrich with Gemini AI recommendation messages ─────────
-    const genAIKey = process.env.GEMINI_API_KEY;
     if (genAIKey && recommendations.length > 0) {
       try {
         const { GoogleGenerativeAI } = await import("@google/generative-ai");

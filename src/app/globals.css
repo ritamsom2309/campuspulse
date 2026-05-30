@@ -36,7 +36,7 @@
   --radius-md: 16px;
   --radius-lg: 24px;
   --radius-xl: 32px;
-  --radius-full: 9999px;
+  --radius-full: 0px;
 }
 
 .dark {
@@ -148,7 +148,7 @@ body {
 .glass-card, .cyber-card {
   background: var(--bg-card);
   border: 2px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: 0px;
   box-shadow: 5px 5px 0px 0px var(--shadow-color);
   position: relative;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -204,7 +204,7 @@ body {
   letter-spacing: 0.05em;
   padding: 0.65rem 1.75rem;
   border: 2px solid var(--border);
-  border-radius: var(--radius-full);
+  border-radius: 0px;
   cursor: pointer;
   box-shadow: 4px 4px 0px 0px var(--shadow-color);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -234,7 +234,7 @@ body {
   letter-spacing: 0.05em;
   padding: 0.65rem 1.75rem;
   border: 2px solid var(--border);
-  border-radius: var(--radius-full);
+  border-radius: 0px;
   cursor: pointer;
   box-shadow: 4px 4px 0px 0px var(--shadow-color);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -258,7 +258,7 @@ body {
   letter-spacing: 0.02em;
   padding: 0.65rem 1.5rem;
   border: 2px solid var(--border);
-  border-radius: var(--radius-full);
+  border-radius: 0px;
   cursor: pointer;
   box-shadow: 2px 2px 0px 0px var(--shadow-color);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);

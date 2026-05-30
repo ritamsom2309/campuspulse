@@ -128,7 +128,7 @@ export default function Navbar() {
               style={{
                 width: 34,
                 height: 34,
-                borderRadius: "var(--radius-full)",
+                borderRadius: "0px",
                 background: "var(--color-accent)",
                 border: "2px solid var(--border)",
                 display: "flex",
@@ -165,7 +165,7 @@ export default function Navbar() {
               style={{
                 background: "var(--bg-card)",
                 border: "2px solid var(--border)",
-                borderRadius: "var(--radius-full)",
+                borderRadius: "0px",
                 width: 72,
                 height: 40,
                 cursor: "pointer",
@@ -190,7 +190,7 @@ export default function Navbar() {
                 style={{
                   width: 30,
                   height: 30,
-                  borderRadius: "var(--radius-full)",
+                  borderRadius: "0px",
                   background: theme === "light" ? "var(--color-accent)" : "var(--color-primary)",
                   border: "2px solid var(--border)",
                   display: "flex",
@@ -217,7 +217,7 @@ export default function Navbar() {
                   position: "relative",
                   background: "var(--bg-card)",
                   border: "2px solid var(--border)",
-                  borderRadius: "var(--radius-full)",
+                  borderRadius: "0px",
                   width: 40,
                   height: 40,
                   cursor: "pointer",
@@ -287,7 +287,7 @@ export default function Navbar() {
                             marginLeft: "0.5rem",
                             background: "var(--color-secondary)",
                             color: "white",
-                            borderRadius: "var(--radius-full)",
+                            borderRadius: "0px",
                             padding: "0.1rem 0.5rem",
                             fontSize: "0.68rem",
                           }}
@@ -354,7 +354,7 @@ export default function Navbar() {
                           <div style={{
                             width: 32,
                             height: 32,
-                            borderRadius: "var(--radius-full)",
+                            borderRadius: "0px",
                             background: "var(--bg-elevated)",
                             border: "2px solid var(--border)",
                             display: "flex",
@@ -411,7 +411,7 @@ export default function Navbar() {
                                 height: 8,
                                 background: "var(--color-secondary)",
                                 border: "1.5px solid var(--border)",
-                                borderRadius: "var(--radius-full)",
+                                borderRadius: "0px",
                                 flexShrink: 0,
                                 marginTop: 6,
                               }}
@@ -434,7 +434,8 @@ export default function Navbar() {
                 padding: "0.5rem 1.35rem", 
                 textDecoration: "none",
                 display: "inline-flex",
-                alignItems: "center"
+                alignItems: "center",
+                borderRadius: "0px"
               }}
             >
               + Create Event
@@ -448,7 +449,7 @@ export default function Navbar() {
               padding: 2,
               border: "2px solid var(--border)",
               background: "var(--bg-card)",
-              borderRadius: "var(--radius-full)",
+              borderRadius: "50%",
               boxShadow: "2px 2px 0px 0px var(--shadow-color)"
             }}>
               <UserButton afterSignOutUrl="/" />
@@ -466,7 +467,7 @@ export default function Navbar() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                borderRadius: "var(--radius-full)",
+                borderRadius: "0px",
                 boxShadow: "2px 2px 0px 0px var(--shadow-color)"
               }}
             >

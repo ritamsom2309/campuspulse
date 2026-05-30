@@ -114,9 +114,22 @@ export default function EventDetailPage() {
         </button>
 
         {/* Event Header */}
-        <div className="glass-card" style={{ padding: "2rem", marginBottom: "1.5rem" }}>
-          {/* Category + Status */}
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
+        <div className="glass-card" style={{ padding: "0", overflow: "hidden", marginBottom: "1.5rem" }}>
+          {/* Poster Hero Banner */}
+          {event.posterUrl && (
+            <div style={{ width: "100%", height: "320px", position: "relative", overflow: "hidden", borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+              <img
+                src={event.posterUrl}
+                alt={event.title}
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(10,15,30,0) 40%, rgba(10,15,30,0.9) 100%)" }} />
+            </div>
+          )}
+
+          <div style={{ padding: "2rem" }}>
+            {/* Category + Status */}
+            <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1rem" }}>
             <span className="badge badge-primary">{event.category}</span>
             {userRole && (
               <span className="badge badge-warning">
@@ -298,6 +311,7 @@ export default function EventDetailPage() {
             )}
           </div>
         </div>
+      </div>
 
         {/* QR Modal */}
         {showQR && registration?.qrToken && (

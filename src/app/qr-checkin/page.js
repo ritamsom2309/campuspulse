@@ -65,7 +65,7 @@ function CheckInResult({ result, onClear }) {
             </div>
             {result.event && (
               <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
-                ✓ Checked in to: <strong>{result.event.title}</strong>
+                Checked in to: <strong>{result.event.title}</strong>
               </div>
             )}
           </div>
@@ -166,9 +166,9 @@ export default function QRCheckinPage() {
         {/* Tabs */}
         <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.5rem", background: "rgba(255,255,255,0.03)", padding: 4, borderRadius: "var(--radius-md)", border: "1px solid rgba(255,255,255,0.08)", width: "fit-content" }}>
           {[
-            { key: "scanner", label: "📷 QR Scanner" },
-            { key: "manual", label: "⌨️ Manual Entry" },
-            { key: "attendance", label: "📋 Attendance List" },
+            { key: "scanner", label: "QR Scanner" },
+            { key: "manual", label: "Manual Entry" },
+            { key: "attendance", label: "Attendance List" },
           ].map((tab) => (
             <button
               key={tab.key}

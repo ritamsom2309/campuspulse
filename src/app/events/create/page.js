@@ -33,53 +33,152 @@ const CATEGORIES = [
 
 function TagInput({ tags, onChange, placeholder }) {
   const [input, setInput] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const POPULAR_TAGS = [
+    "hackathon", "coding", "design", "gaming", "sports", "music", "dance", 
+    "seminar", "workshop", "startup", "marketing", "networking", 
+    "ai", "ml", "web-dev", "app-dev", "blockchain", "cybersecurity",
+    "photography", "art", "charity", "career", "academic", "finance"
+  ];
 
   const addTag = (tag) => {
-    const trimmed = tag.trim();
+    const trimmed = tag.trim().toLowerCase().replace(/\s+/g, "-");
     if (trimmed && !tags.includes(trimmed) && tags.length < 10) {
       onChange([...tags, trimmed]);
     }
     setInput("");
+    setShowSuggestions(false);
   };
 
   const removeTag = (tag) => onChange(tags.filter((t) => t !== tag));
 
+  // Filter popular tags based on current input text, excluding tags already added
+  const filteredSuggestions = POPULAR_TAGS.filter(
+    (s) => 
+      s.toLowerCase().includes(input.toLowerCase()) && 
+      !tags.includes(s)
+  );
+
   return (
-    <div className="tag-input-container">
-      {tags.map((tag) => (
-        <span key={tag} className="tag-chip">
-          {tag}
-          <button type="button" onClick={() => removeTag(tag)}>
-            ×
-          </button>
-        </span>
-      ))}
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === ",") {
-            e.preventDefault();
-            addTag(input);
-          }
-          if (e.key === "Backspace" && !input && tags.length > 0) {
-            removeTag(tags[tags.length - 1]);
-          }
-        }}
-        onBlur={() => input && addTag(input)}
-        placeholder={tags.length === 0 ? placeholder : ""}
-        style={{
-          border: "none",
-          background: "transparent",
-          color: "white",
-          outline: "none",
-          fontSize: "0.85rem",
-          flex: 1,
-          minWidth: 100,
-          padding: "0.25rem",
-        }}
-      />
+    <div style={{ position: "relative" }}>
+      <div className="tag-input-container" style={{ minHeight: "2.75rem" }}>
+        {tags.map((tag) => (
+          <span key={tag} className="tag-chip" style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
+            #{tag}
+            <button 
+              type="button" 
+              onClick={() => removeTag(tag)}
+              style={{ cursor: "pointer", background: "none", border: "none", color: "var(--text-secondary)", fontWeight: 800, fontSize: "0.75rem" }}
+            >
+              ×
+            </button>
+          </span>
+        ))}
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => {
+            setInput(e.target.value);
+            setShowSuggestions(true);
+          }}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => {
+            // delay hiding suggestions so clicks on suggestions are registered first
+            setTimeout(() => setShowSuggestions(false), 200);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === ",") {
+              e.preventDefault();
+              if (input.trim()) {
+                addTag(input);
+              }
+            }
+            if (e.key === "Backspace" && !input && tags.length > 0) {
+              removeTag(tags[tags.length - 1]);
+            }
+          }}
+          placeholder={tags.length === 0 ? placeholder : ""}
+          style={{
+            border: "none",
+            background: "transparent",
+            color: "var(--text-primary)",
+            outline: "none",
+            fontSize: "0.85rem",
+            flex: 1,
+            minWidth: 120,
+            padding: "0.25rem",
+          }}
+        />
+      </div>
+
+      {/* Suggestion Dropdown */}
+      {showSuggestions && (input || filteredSuggestions.length > 0) && (
+        <div style={{
+          position: "absolute",
+          top: "100%",
+          left: 0,
+          right: 0,
+          background: "var(--bg-card)",
+          border: "2px solid var(--border)",
+          borderRadius: "var(--radius-sm)",
+          boxShadow: "4px 4px 0px 0px var(--shadow-color)",
+          zIndex: 50,
+          marginTop: "0.4rem",
+          maxHeight: "180px",
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column"
+        }}>
+          {filteredSuggestions.length > 0 ? (
+            filteredSuggestions.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                onMouseDown={() => addTag(suggestion)}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "0.5rem 0.8rem",
+                  border: "none",
+                  borderBottom: "1.5px solid var(--border)",
+                  background: "transparent",
+                  color: "var(--text-primary)",
+                  fontSize: "0.78rem",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  transition: "background 0.1s"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-elevated)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
+              >
+                #{suggestion}
+              </button>
+            ))
+          ) : (
+            input.trim() && (
+              <button
+                key="custom-add"
+                type="button"
+                onMouseDown={() => addTag(input)}
+                style={{
+                  width: "100%",
+                  textAlign: "left",
+                  padding: "0.5rem 0.8rem",
+                  border: "none",
+                  background: "transparent",
+                  color: "var(--color-primary)",
+                  fontSize: "0.78rem",
+                  fontWeight: 800,
+                  cursor: "pointer"
+                }}
+              >
+                ➕ Add Custom Tag: "{input.trim()}"
+              </button>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 }

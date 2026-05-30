@@ -85,42 +85,7 @@ export const createTeam = mutation({
 export const joinTeam = mutation({
   args: { teamId: v.id("teams"), userId: v.id("users") },
   handler: async (ctx, { teamId, userId }) => {
-    const team = await ctx.db.get(teamId);
-    if (!team) throw new Error("Team not found");
-
-    const existing = await ctx.db
-      .query("teamMembers")
-      .withIndex("by_team_user", (q) =>
-        q.eq("teamId", teamId).eq("userId", userId)
-      )
-      .unique();
-    
-    if (existing) {
-      if (existing.status === "pending") {
-        // Automatically accept invitation if they try to join
-        await ctx.db.patch(existing._id, { status: "accepted" });
-        return existing._id;
-      }
-      return existing._id;
-    }
-
-    // Check capacity (counting both accepted and pending reservations)
-    if (team.maxMembers) {
-      const members = await ctx.db
-        .query("teamMembers")
-        .withIndex("by_team", (q) => q.eq("teamId", teamId))
-        .collect();
-      if (members.length >= team.maxMembers) {
-        throw new Error("Team is full");
-      }
-    }
-
-    return await ctx.db.insert("teamMembers", {
-      teamId,
-      userId,
-      joinedAt: Date.now(),
-      status: "accepted",
-    });
+    throw new Error("Direct team joining is disabled. You must request to join a team with friends inside instead.");
   },
 });
 
@@ -257,6 +222,39 @@ export const requestToJoinTeam = mutation({
       .unique();
 
     if (existing) throw new Error("You have already joined or requested this team");
+
+    // Retrieve the user's friends
+    const [asUser1, asUser2] = await Promise.all([
+      ctx.db
+        .query("friendships")
+        .withIndex("by_user1", (q) => q.eq("user1", userId))
+        .collect(),
+      ctx.db
+        .query("friendships")
+        .withIndex("by_user2", (q) => q.eq("user2", userId))
+        .collect(),
+    ]);
+
+    const friendIds = new Set([
+      ...asUser1.map((f) => f.user2),
+      ...asUser2.map((f) => f.user1),
+    ]);
+
+    // Get all accepted members of this team
+    const members = await ctx.db
+      .query("teamMembers")
+      .withIndex("by_team", (q) => q.eq("teamId", teamId))
+      .collect();
+
+    const acceptedMemberIds = members
+      .filter((m) => !m.status || m.status === "accepted")
+      .map((m) => m.userId);
+
+    // Verify the user has at least one friend currently in the team
+    const hasFriend = acceptedMemberIds.some((mId) => friendIds.has(mId));
+    if (!hasFriend) {
+      throw new Error("You can only request to join teams that have at least one of your friends.");
+    }
 
     // Insert as requested
     await ctx.db.insert("teamMembers", {

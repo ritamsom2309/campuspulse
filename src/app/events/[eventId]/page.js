@@ -9,7 +9,7 @@ import Navbar from "../../../components/layout/Navbar";
 import { QRCodeDisplay } from "../../../components/qr/QRCodeDisplay";
 import {
   Calendar, MapPin, Users, Heart, Clock, Tag, ArrowLeft,
-  Edit, Trash2, QrCode, UserPlus, Shield, Eye
+  Edit, Trash2, QrCode, UserPlus, Shield, Eye, Search, Settings
 } from "lucide-react";
 import { formatDate, formatDateTime, getDaysUntilDeadline, isDeadlinePassed } from "../../../lib/utils/formatDate";
 import { useState } from "react";
@@ -92,8 +92,8 @@ export default function EventDetailPage() {
   if (!event) return (
     <div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
       <Navbar />
-      <div style={{ textAlign: "center", padding: "6rem 2rem", color: "var(--text-muted)" }}>
-        <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🔍</div>
+      <div style={{ textAlign: "center", padding: "6rem 2rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+        <Search size={40} style={{ marginBottom: "1rem" }} />
         <p>Event not found</p>
       </div>
     </div>
@@ -126,7 +126,9 @@ export default function EventDetailPage() {
             {deadlinePassed ? (
               <span className="badge badge-danger">Registration Closed</span>
             ) : daysLeft <= 3 ? (
-              <span className="badge badge-danger">🔥 {daysLeft}d left</span>
+              <span className="badge badge-danger" style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
+                <Clock size={10} /> {daysLeft}d left
+              </span>
             ) : (
               <span className="badge badge-success">Open</span>
             )}
@@ -157,15 +159,42 @@ export default function EventDetailPage() {
           </div>
 
           {/* Tags */}
-          {event.tags?.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "1.5rem" }}>
-              {event.tags.map((tag) => (
-                <span key={tag} className="badge" style={{ background: "rgba(255,255,255,0.05)", color: "var(--text-secondary)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <Tag size={10} />#{tag}
-                </span>
-              ))}
-            </div>
-          )}
+          {(() => {
+            const getTagsArray = () => {
+              if (!event.tags) return [];
+              if (Array.isArray(event.tags)) return event.tags.filter(t => typeof t === "string");
+              if (typeof event.tags === "string") {
+                return event.tags.split(",").map(t => t.trim()).filter(Boolean);
+              }
+              return [];
+            };
+            const tagsList = getTagsArray();
+            if (tagsList.length === 0) return null;
+            return (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "1.5rem" }}>
+                {tagsList.map((tag, idx) => {
+                  const cleanTag = tag.trim();
+                  const displayTag = cleanTag.startsWith("#") ? cleanTag.slice(1) : cleanTag;
+                  if (!displayTag) return null;
+                  return (
+                    <span 
+                      key={`${displayTag}-${idx}`} 
+                      className="badge" 
+                      style={{ 
+                        background: "var(--bg-elevated)", 
+                        color: "var(--text-primary)", 
+                        border: "2px solid var(--border)",
+                        boxShadow: "2px 2px 0px 0px var(--shadow-color)"
+                      }}
+                    >
+                      <Tag size={11} color="var(--text-secondary)" />
+                      #{displayTag.toLowerCase()}
+                    </span>
+                  );
+                })}
+              </div>
+            );
+          })()}
 
           {/* Action buttons */}
           <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
@@ -213,12 +242,20 @@ export default function EventDetailPage() {
               id="like-btn"
               onClick={() => user && toggleLike({ eventId, userId: user._id })}
               style={{
-                display: "flex", alignItems: "center", gap: "0.4rem",
-                background: liked ? "rgba(239,68,68,0.15)" : "rgba(255,255,255,0.05)",
-                border: `1px solid ${liked ? "rgba(239,68,68,0.3)" : "rgba(255,255,255,0.1)"}`,
-                borderRadius: "var(--radius-md)", padding: "0.5rem 1rem",
-                cursor: "pointer", color: liked ? "#fca5a5" : "var(--text-secondary)", fontSize: "0.875rem",
-                transition: "all 0.2s",
+                display: "flex", 
+                alignItems: "center", 
+                gap: "0.4rem",
+                background: liked ? "var(--color-secondary)" : "var(--bg-card)",
+                border: "2px solid var(--border)",
+                borderRadius: "var(--radius-sm)", 
+                padding: "0.5rem 1rem",
+                cursor: "pointer", 
+                color: liked ? "white" : "var(--text-primary)", 
+                fontSize: "0.875rem",
+                fontWeight: 800,
+                textTransform: "uppercase",
+                boxShadow: liked ? "2px 2px 0px 0px var(--shadow-color)" : "none",
+                transition: "all 0.15s ease",
               }}
             >
               <Heart size={15} fill={liked ? "currentColor" : "none"} />
@@ -232,13 +269,31 @@ export default function EventDetailPage() {
               </a>
             )}
             {canDelete && (
-              <button onClick={handleDelete} style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", borderRadius: "var(--radius-md)", padding: "0.5rem 1rem", cursor: "pointer", color: "#fca5a5", fontSize: "0.875rem" }}>
+              <button 
+                onClick={handleDelete} 
+                style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: "0.4rem", 
+                  background: "var(--color-danger)", 
+                  border: "2px solid var(--border)", 
+                  borderRadius: "var(--radius-sm)", 
+                  padding: "0.5rem 1rem", 
+                  cursor: "pointer", 
+                  color: "white", 
+                  fontSize: "0.875rem",
+                  fontWeight: 800,
+                  textTransform: "uppercase",
+                  boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+                  transition: "all 0.15s ease"
+                }}
+              >
                 <Trash2 size={15} /> Delete
               </button>
             )}
             {canCheckIn && (
-              <a href="/qr-checkin" className="btn-ghost" style={{ display: "flex", alignItems: "center", gap: "0.4rem", textDecoration: "none", fontSize: "0.875rem" }}>
-                <QrCode size={15} /> Manage Check-in
+              <a href={`/events/${eventId}/manage`} className="btn-primary" style={{ display: "flex", alignItems: "center", gap: "0.4rem", textDecoration: "none", fontSize: "0.875rem" }}>
+                <Settings size={15} /> Manage Event
               </a>
             )}
           </div>
@@ -258,31 +313,51 @@ export default function EventDetailPage() {
         )}
 
         {/* Tabs */}
-        <div style={{ display: "flex", gap: "0.25rem", marginBottom: "1.5rem", background: "rgba(255,255,255,0.03)", padding: 4, borderRadius: "var(--radius-md)", border: "1px solid rgba(255,255,255,0.08)", width: "fit-content" }}>
+        {/* Tab Selection Row (Brutalist panel styling) */}
+        <div style={{ 
+          display: "flex", 
+          gap: "0.5rem", 
+          background: "var(--bg-elevated)", 
+          padding: "0.5rem", 
+          borderRadius: "var(--radius-md)", 
+          border: "2px solid var(--border)", 
+          marginBottom: "1.5rem", 
+          width: "fit-content", 
+          overflowX: "auto",
+          boxShadow: "3px 3px 0px 0px var(--shadow-color)"
+        }}>
           {[
             { key: "details", label: "Details" },
             { key: "registrations", label: `Registrations (${registrations?.length ?? 0})` },
             ...(canEdit ? [{ key: "organizers", label: "Organizers" }] : []),
-          ].map((tab) => (
-            <button
-              key={tab.key}
-              id={`tab-${tab.key}`}
-              onClick={() => setActiveTab(tab.key)}
-              style={{
-                padding: "0.45rem 1rem",
-                borderRadius: "calc(var(--radius-md) - 2px)",
-                border: "none",
-                cursor: "pointer",
-                background: activeTab === tab.key ? "rgba(99,102,241,0.25)" : "transparent",
-                color: activeTab === tab.key ? "#a5b4fc" : "var(--text-secondary)",
-                fontSize: "0.85rem",
-                fontWeight: activeTab === tab.key ? 600 : 400,
-                transition: "all 0.2s",
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+          ].map((tab) => {
+            const active = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                id={`tab-${tab.key}`}
+                onClick={() => setActiveTab(tab.key)}
+                style={{
+                  padding: "0.5rem 1.15rem",
+                  borderRadius: "var(--radius-sm)",
+                  border: "2px solid " + (active ? "var(--border)" : "transparent"),
+                  cursor: "pointer",
+                  background: active ? "var(--color-primary)" : "transparent",
+                  color: active ? "white" : "var(--text-primary)",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  transition: "all 0.15s ease",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.4rem",
+                  whiteSpace: "nowrap",
+                  boxShadow: active ? "2px 2px 0px 0px var(--shadow-color)" : "none"
+                }}
+              >
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Tab content */}

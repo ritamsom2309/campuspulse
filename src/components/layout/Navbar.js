@@ -21,28 +21,32 @@ import {
   ChevronRight,
   Sun,
   Moon,
+  Ticket,
+  Award,
+  Sparkles,
+  Clock,
+  UserCheck,
+  Megaphone,
+  Settings,
 } from "lucide-react";
 import { getRelativeTime } from "../../lib/utils/formatDate";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/events", label: "Events", icon: Calendar },
-  { href: "/recommendations", label: "For You", icon: Star },
   { href: "/teams", label: "Teams", icon: Users },
   { href: "/friends", label: "Friends", icon: Users },
-  { href: "/analytics", label: "Analytics", icon: BarChart2 },
-  { href: "/qr-checkin", label: "QR Check-in", icon: QrCode },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
 const notificationIcons = {
-  registration: "🎟️",
-  organizer_invite: "👑",
-  recommendation: "✨",
-  event_reminder: "⏰",
-  team_invite: "🤝",
-  friend: "👥",
-  general: "📢",
+  registration: Ticket,
+  organizer_invite: Award,
+  recommendation: Sparkles,
+  event_reminder: Clock,
+  team_invite: UserCheck,
+  friend: Users,
+  general: Megaphone,
 };
 
 export default function Navbar() {
@@ -276,7 +280,7 @@ export default function Navbar() {
                     }}
                   >
                     <span style={{ fontWeight: 800, fontSize: "0.78rem", fontFamily: "var(--font-display)", color: "var(--text-primary)" }}>
-                      🔔 SYSTEM_ALERTS
+                      NOTIFICATIONS
                       {unreadCount > 0 && (
                         <span
                           style={{
@@ -326,7 +330,7 @@ export default function Navbar() {
                           fontFamily: "var(--font-sans)",
                         }}
                       >
-                        No active signals to display
+                        No notifications yet
                       </div>
                     ) : (
                       notifications.map((notif) => (
@@ -347,9 +351,24 @@ export default function Navbar() {
                           onMouseEnter={(e) => e.currentTarget.style.background = "var(--bg-elevated)"}
                           onMouseLeave={(e) => e.currentTarget.style.background = notif.isRead ? "transparent" : "rgba(139, 92, 246, 0.04)"}
                         >
-                          <span style={{ fontSize: "1.1rem", flexShrink: 0, marginTop: "0.15rem" }}>
-                            {notificationIcons[notif.type] ?? "📢"}
-                          </span>
+                          <div style={{
+                            width: 32,
+                            height: 32,
+                            borderRadius: "var(--radius-full)",
+                            background: "var(--bg-elevated)",
+                            border: "2px solid var(--border)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            marginTop: "0.15rem",
+                            boxShadow: "1.5px 1.5px 0px 0px var(--shadow-color)",
+                          }}>
+                            {(() => {
+                              const NotifIcon = notificationIcons[notif.type] ?? Megaphone;
+                              return <NotifIcon size={14} color="var(--color-primary)" strokeWidth={2.5} />;
+                            })()}
+                          </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <p
                               style={{

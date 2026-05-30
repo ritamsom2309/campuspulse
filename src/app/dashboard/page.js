@@ -10,15 +10,21 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Calendar, Bell, Star, Zap, BarChart2,
-  QrCode, Users, TrendingUp, Plus, ArrowRight,
-  Sparkles, ShieldAlert, Award
+  QrCode, Users, Plus, ArrowRight,
+  Sparkles, ShieldAlert, Award, Ticket, Clock,
+  UserCheck, Megaphone, Settings
 } from "lucide-react";
 import { getRelativeTime } from "../../lib/utils/formatDate";
 import { useEffect } from "react";
 
 const notifIcons = {
-  registration: "🎟️", organizer_invite: "👑", recommendation: "✨",
-  event_reminder: "⏰", team_invite: "🤝", friend: "👥", general: "📢",
+  registration: Ticket,
+  organizer_invite: Award,
+  recommendation: Sparkles,
+  event_reminder: Clock,
+  team_invite: UserCheck,
+  friend: Users,
+  general: Megaphone,
 };
 
 function StatCard({ icon: Icon, label, value, color, href }) {
@@ -85,7 +91,7 @@ export default function DashboardPage() {
     api.attendance.getUserAttendance,
     user ? { userId: user._id } : "skip"
   );
-  const trendingCategories = useQuery(api.analytics.getTrendingCategories);
+
 
   // Redirect to onboarding if not complete
   useEffect(() => {
@@ -135,23 +141,23 @@ export default function DashboardPage() {
           
           <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: "var(--color-primary)", fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "0.75rem", letterSpacing: "0.05em", marginBottom: "0.5rem" }}>
             <Sparkles size={12} strokeWidth={2.5} />
-            ONLINE // SYSTEM_OPERATOR_ACTIVE
+            CAMPUS PULSE // SYSTEM ACTIVE
           </div>
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "clamp(1.5rem, 3.5vw, 2rem)", color: "var(--text-primary)", letterSpacing: "-0.01em", textTransform: "uppercase" }}>
-            Welcome back, {user?.name?.split(" ")[0] ?? "Explorer"}! 👋
+            Welcome back, {user?.name?.split(" ")[0] ?? "Explorer"}!
           </h1>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", fontWeight: 500, fontFamily: "var(--font-sans)", marginTop: "0.25rem" }}>
-            There are <span style={{ color: "var(--color-primary)", fontWeight: 700 }}>{events?.length ?? 0} campus events</span> compiled on the ledger.
-            {unreadCount > 0 && ` You have ${unreadCount} new alerts in your signal log.`}
+            There are <span style={{ color: "var(--color-primary)", fontWeight: 700 }}>{events?.length ?? 0} campus events</span> available to explore.
+            {unreadCount > 0 && ` You have ${unreadCount} new notifications in your log.`}
           </p>
         </div>
 
         {/* Tactile pop stat indicators */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1.25rem", marginBottom: "2.5rem" }}>
-          <StatCard icon={Calendar} label="SYS_EVENTS" value={events?.length ?? "0"} color="var(--color-primary)" href="/events" />
-          <StatCard icon={Star} label="REG_NODES" value={userRegistrations?.length ?? "0"} color="var(--color-secondary)" href="/profile" />
-          <StatCard icon={Zap} label="SIG_ATTENDED" value={userAttendance?.length ?? "0"} color="var(--color-success)" href="/profile" />
-          <StatCard icon={Bell} label="ALERTS_LOGGED" value={unreadCount || "0"} color="var(--color-accent)" href="#" />
+          <StatCard icon={Calendar} label="TOTAL EVENTS" value={events?.length ?? "0"} color="var(--color-primary)" href="/events" />
+          <StatCard icon={Star} label="REGISTRATIONS" value={userRegistrations?.length ?? "0"} color="var(--color-secondary)" href="/profile" />
+          <StatCard icon={Zap} label="ATTENDED" value={userAttendance?.length ?? "0"} color="var(--color-success)" href="/profile" />
+          <StatCard icon={Bell} label="ALERTS" value={unreadCount || "0"} color="var(--color-accent)" href="#" />
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "2rem" }}>
@@ -162,7 +168,7 @@ export default function DashboardPage() {
               <div style={{ marginBottom: "2.5rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
                   <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "0.9rem", color: "var(--text-primary)" }}>
-                    ★ UPCOMING SCHEDULE
+                    UPCOMING SCHEDULE
                   </h2>
                   <Link href="/profile" style={{ color: "var(--color-primary)", fontSize: "0.72rem", fontWeight: 800, fontFamily: "var(--font-display)", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.3rem" }}>
                     [ VIEW ALL ] <ArrowRight size={12} strokeWidth={2.5} />
@@ -208,7 +214,7 @@ export default function DashboardPage() {
             <div>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
                 <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "0.9rem", color: "var(--text-primary)" }}>
-                  ★ TRENDING EVENT SIGNALS
+                  TRENDING EVENTS
                 </h2>
                 <Link href="/events" style={{ color: "var(--color-primary)", fontSize: "0.72rem", fontWeight: 800, fontFamily: "var(--font-display)", textDecoration: "none", display: "flex", alignItems: "center", gap: "0.3rem" }}>
                   [ EXPLORE ALL ] <ArrowRight size={12} strokeWidth={2.5} />
@@ -254,14 +260,13 @@ export default function DashboardPage() {
               }}
             >
               <h3 style={{ fontWeight: 800, fontSize: "0.75rem", fontFamily: "var(--font-display)", letterSpacing: "0.05em", marginBottom: "0.85rem", color: "var(--text-secondary)" }}>
-                ★ CMD_EXECUTION_GRID
+                QUICK ACTIONS
               </h3>
               {[
                 { href: "/events/create", icon: Plus, label: "CREATE EVENT", color: "var(--color-primary)" },
-                { href: "/recommendations", icon: Star, label: "GEMINI AI FEED", color: "var(--color-secondary)" },
-                { href: "/qr-checkin", icon: QrCode, label: "QR ATTENDANCE", color: "var(--color-accent)" },
-                { href: "/analytics", icon: BarChart2, label: "SYS ANALYTICS", color: "var(--color-success)" },
-                { href: "/teams", icon: Users, label: "SQUAD MANAGER", color: "var(--color-primary)" },
+                { href: "/organizer", icon: Settings, label: "YOUR EVENTS", color: "var(--color-accent)" },
+                { href: "/recommendations", icon: Star, label: "AI EVENT FEED", color: "var(--color-secondary)" },
+                { href: "/teams", icon: Users, label: "TEAM MANAGER", color: "var(--color-primary)" },
               ].map(({ href, icon: Icon, label, color }) => (
                 <Link key={href} href={href} style={{ textDecoration: "none" }}>
                   <div style={{
@@ -304,29 +309,7 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            {/* Trending categories telemetry */}
-            {trendingCategories && trendingCategories.length > 0 && (
-              <div 
-                className="pop-shadow-card" 
-                style={{ 
-                  padding: "1.25rem",
-                  background: "var(--bg-card)",
-                  borderRadius: "var(--radius-md)"
-                }}
-              >
-                <h3 style={{ fontWeight: 800, fontSize: "0.75rem", fontFamily: "var(--font-display)", letterSpacing: "0.05em", marginBottom: "0.85rem", color: "var(--color-primary)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                  <TrendingUp size={14} strokeWidth={2.5} /> TOP CATEGORIES
-                </h3>
-                {trendingCategories.slice(0, 5).map((cat, i) => (
-                  <div key={cat.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.5rem 0", borderBottom: i < 4 ? "2px solid var(--bg-elevated)" : "none", fontFamily: "var(--font-sans)", fontSize: "0.75rem", fontWeight: 600 }}>
-                    <span style={{ color: "var(--text-primary)" }}>● {cat.name.toUpperCase()}</span>
-                    <span style={{ color: "var(--color-primary)", fontFamily: "var(--font-display)", fontWeight: 800 }}>
-                      {cat.registrations} REG_SIG
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+
 
             {/* Diagnostic Alert Feed alerts */}
             {notifications.length > 0 && (
@@ -338,17 +321,32 @@ export default function DashboardPage() {
                 }}
               >
                 <h3 style={{ fontWeight: 800, fontSize: "0.75rem", fontFamily: "var(--font-display)", letterSpacing: "0.05em", marginBottom: "0.85rem", color: "var(--color-secondary)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                  <ShieldAlert size={14} strokeWidth={2.5} /> SYSTEM ALERTS
+                  <ShieldAlert size={14} strokeWidth={2.5} /> NOTIFICATIONS
                 </h3>
-                {notifications.slice(0, 4).map((notif) => (
-                  <div key={notif._id} style={{ display: "flex", gap: "0.6rem", padding: "0.55rem 0", borderBottom: "2px solid var(--bg-elevated)" }}>
-                    <span style={{ fontSize: "1rem" }}>{notifIcons[notif.type]}</span>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "var(--font-sans)" }}>{notif.title}</div>
-                      <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)", fontWeight: 500, marginTop: "0.15rem" }}>{getRelativeTime(notif.createdAt)}</div>
+                {notifications.slice(0, 4).map((notif) => {
+                  const NotifIcon = notifIcons[notif.type] ?? Megaphone;
+                  return (
+                    <div key={notif._id} style={{ display: "flex", gap: "0.6rem", padding: "0.55rem 0", borderBottom: "2px solid var(--bg-elevated)", alignItems: "center" }}>
+                      <div style={{
+                        width: 26,
+                        height: 26,
+                        borderRadius: "var(--radius-full)",
+                        background: "var(--bg-elevated)",
+                        border: "2px solid var(--border)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0
+                      }}>
+                        <NotifIcon size={12} color="var(--color-secondary)" strokeWidth={2.5} />
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--text-primary)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: "var(--font-sans)" }}>{notif.title}</div>
+                        <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontFamily: "var(--font-sans)", fontWeight: 500, marginTop: "0.15rem" }}>{getRelativeTime(notif.createdAt)}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

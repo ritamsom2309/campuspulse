@@ -18,9 +18,11 @@ function SkeletonCard() {
     <div 
       className="skeleton"
       style={{ 
-        height: 200,
+        height: 280,
         border: "2px dashed var(--border)", 
-        borderRadius: "var(--radius-md)"
+        borderRadius: "var(--radius-sm)",
+        background: "var(--bg-elevated)",
+        boxShadow: "4px 4px 0px 0px var(--shadow-color)"
       }}
     />
   );
@@ -36,29 +38,64 @@ export default function EventsPage() {
     category: category !== "All" ? category : undefined,
   });
 
-  const filtered = (events ?? []).filter((e) =>
-    !search ||
-    e.title.toLowerCase().includes(search.toLowerCase()) ||
-    e.description?.toLowerCase().includes(search.toLowerCase()) ||
-    e.tags?.some((t) => t.toLowerCase().includes(search.toLowerCase()))
-  );
+  // Safe tag extraction to prevent crashes if e.tags is a string, array, or undefined
+  const getTagsArray = (tags) => {
+    if (!tags) return [];
+    if (Array.isArray(tags)) return tags.filter((t) => typeof t === "string");
+    if (typeof tags === "string") {
+      return tags.split(",").map((t) => t.trim()).filter(Boolean);
+    }
+    return [];
+  };
+
+  const filtered = (events ?? []).filter((e) => {
+    if (!search) return true;
+    const searchLower = search.toLowerCase();
+    
+    // Safely check title and description
+    const titleMatch = e.title?.toLowerCase().includes(searchLower) ?? false;
+    const descMatch = e.description?.toLowerCase().includes(searchLower) ?? false;
+    
+    // Safely extract and check tags list
+    const tagsList = getTagsArray(e.tags);
+    const tagsMatch = tagsList.some((t) => t.toLowerCase().includes(searchLower));
+    
+    return titleMatch || descMatch || tagsMatch;
+  });
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-primary)" }} className="dot-grid">
       <Navbar />
 
       <main style={{ padding: "2.5rem 1.5rem", maxWidth: 1200, margin: "0 auto" }}>
-        {/* Playful Header */}
-        <div style={{ marginBottom: "2rem" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: "var(--color-primary)", fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "0.75rem", letterSpacing: "0.05em", marginBottom: "0.5rem" }}>
-            <Sparkles size={12} strokeWidth={2.5} />
-            DATABASE // ACTIVE_SIGNAL_Feeds
+        {/* Premium Header */}
+        <div style={{ marginBottom: "2.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem" }}>
+            <div style={{ 
+              width: 44, 
+              height: 44, 
+              borderRadius: "var(--radius-sm)", 
+              background: "var(--color-primary)", 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center",
+              border: "2px solid var(--border)",
+              boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+              flexShrink: 0
+            }}>
+              <Sparkles size={20} color="white" />
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", color: "var(--color-primary)", fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "0.72rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>
+                CAMPUS DIRECTORY // LIVE FEEDS
+              </div>
+              <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.85rem", color: "var(--text-primary)", letterSpacing: "-0.02em", lineHeight: 1.1 }}>
+                EXPLORE CAMPUS EVENTS
+              </h1>
+            </div>
           </div>
-          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 900, fontSize: "1.75rem", color: "var(--text-primary)", letterSpacing: "-0.01em" }}>
-            ★ EXPLORE CAMPUS EVENTS ★
-          </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: "0.2rem", fontWeight: 600, fontFamily: "var(--font-sans)" }}>
-            Found <span style={{ color: "var(--color-primary)" }}>{events ? `${filtered.length} active event stickers` : "loading catalogs..."}</span> matching your current query.
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.82rem", marginTop: "0.4rem", fontWeight: 600, fontFamily: "var(--font-sans)" }}>
+            Found <span style={{ color: "var(--color-primary)" }}>{events ? `${filtered.length} active events` : "loading events..."}</span> matching your current query.
           </p>
         </div>
 
@@ -81,7 +118,7 @@ export default function EventsPage() {
             <input
               id="event-search"
               type="text"
-              placeholder="SEARCH EVENTS, TAGS, SQUADS..."
+              placeholder="SEARCH EVENTS, TAGS, CATEGORIES..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="input-field"
@@ -113,6 +150,7 @@ export default function EventsPage() {
             border: "2px solid var(--border)",
             borderRadius: "var(--radius-full)",
             boxShadow: "3px 3px 0px 0px var(--shadow-color)",
+            alignItems: "center"
           }}>
             <button
               id="grid-view-btn"
@@ -237,7 +275,7 @@ export default function EventsPage() {
               <AlertCircle size={20} color="#FFFFFF" strokeWidth={2.5} />
             </div>
             <p style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", fontFamily: "var(--font-display)", marginBottom: "0.5rem" }}>
-              NO EVENT STICKERS FOUND!
+              NO EVENTS FOUND!
             </p>
             <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", fontFamily: "var(--font-sans)", fontWeight: 500 }}>
               Adjust your search keywords or tap on another category capsule to load campus events.

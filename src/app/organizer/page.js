@@ -7,8 +7,9 @@ import Navbar from "../../components/layout/Navbar";
 import Link from "next/link";
 import { useState } from "react";
 import {
-  Settings, Plus, BarChart2, Users, Calendar, Edit3,
-  Archive, Eye, ChevronRight, Shield, Trash2, UserPlus, Loader2
+  Settings, Users, Calendar, Edit3,
+  Archive, Eye, Shield, Trash2, UserPlus, Loader2,
+  Laptop, Trophy, Palette, Pin
 } from "lucide-react";
 import { formatDate, isDeadlinePassed } from "../../lib/utils/formatDate";
 
@@ -21,8 +22,11 @@ function EventRow({ event, onArchive }) {
       style={{ padding: "1.25rem 1.5rem", display: "flex", gap: "1.25rem", alignItems: "center", flexWrap: "wrap" }}
     >
       {/* Category icon */}
-      <div style={{ width: 44, height: 44, borderRadius: "var(--radius-md)", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "1.25rem" }}>
-        {event.category === "Technology" ? "💻" : event.category === "Sports" ? "⚽" : event.category === "Arts" ? "🎨" : "📌"}
+      <div style={{ width: 44, height: 44, borderRadius: "var(--radius-md)", background: "rgba(99,102,241,0.15)", border: "1px solid rgba(99,102,241,0.25)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+        {(() => {
+          const Icon = event.category === "Technology" ? Laptop : event.category === "Sports" ? Trophy : event.category === "Arts" ? Palette : Pin;
+          return <Icon size={18} color="var(--color-primary)" />;
+        })()}
       </div>
 
       <div style={{ flex: 1, minWidth: 200 }}>
@@ -53,30 +57,45 @@ function EventRow({ event, onArchive }) {
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
         <Link
           href={`/events/${event._id}`}
-          style={{ display: "flex", alignItems: "center", gap: "0.35rem", textDecoration: "none", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "var(--radius-md)", padding: "0.4rem 0.75rem", color: "var(--text-secondary)", fontSize: "0.78rem", transition: "all 0.2s" }}
+          style={{ 
+            display: "flex", 
+            alignItems: "center", 
+            gap: "0.35rem", 
+            textDecoration: "none", 
+            background: "var(--bg-card)", 
+            border: "2px solid var(--border)", 
+            borderRadius: "var(--radius-sm)", 
+            padding: "0.4rem 0.75rem", 
+            color: "var(--text-primary)", 
+            fontSize: "0.78rem", 
+            fontWeight: 800,
+            textTransform: "uppercase",
+            boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+            cursor: "pointer",
+            transition: "all 0.15s ease" 
+          }}
         >
-          <Eye size={13} />View
+          <Eye size={13} />View Page
         </Link>
-        {(event.organizerRole === "owner" || event.organizerRole === "organizer") && (
-          <>
-            <Link
-              href={`/analytics?event=${event._id}`}
-              style={{ display: "flex", alignItems: "center", gap: "0.35rem", textDecoration: "none", background: "rgba(99,102,241,0.1)", border: "1px solid rgba(99,102,241,0.2)", borderRadius: "var(--radius-md)", padding: "0.4rem 0.75rem", color: "#a5b4fc", fontSize: "0.78rem" }}
-            >
-              <BarChart2 size={13} />Analytics
-            </Link>
-            <Link
-              href="/qr-checkin"
-              style={{ display: "flex", alignItems: "center", gap: "0.35rem", textDecoration: "none", background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)", borderRadius: "var(--radius-md)", padding: "0.4rem 0.75rem", color: "#67e8f9", fontSize: "0.78rem" }}
-            >
-              <Users size={13} />Check-in
-            </Link>
-          </>
-        )}
         {event.organizerRole === "owner" && deadlinePassed && !event.isArchived && (
           <button
             onClick={() => onArchive(event._id)}
-            style={{ display: "flex", alignItems: "center", gap: "0.35rem", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", borderRadius: "var(--radius-md)", padding: "0.4rem 0.75rem", color: "#fcd34d", fontSize: "0.78rem", cursor: "pointer" }}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.35rem", 
+              background: "var(--color-accent)", 
+              border: "2px solid var(--border)", 
+              borderRadius: "var(--radius-sm)", 
+              padding: "0.4rem 0.75rem", 
+              color: "var(--text-primary)", 
+              fontSize: "0.78rem", 
+              fontWeight: 800,
+              textTransform: "uppercase",
+              boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+              cursor: "pointer",
+              transition: "all 0.15s ease" 
+            }}
           >
             <Archive size={13} />Archive
           </button>
@@ -122,28 +141,31 @@ export default function OrganizerPage() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
             <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "2rem", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#f59e0b,#ef4444)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Settings size={22} color="white" />
+              <div style={{ 
+                width: 44, 
+                height: 44, 
+                borderRadius: "var(--radius-sm)", 
+                background: "var(--color-accent)", 
+                border: "2px solid var(--border)",
+                boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center" 
+              }}>
+                <Settings size={22} color="var(--text-primary)" />
               </div>
               Organizer Dashboard
             </h1>
             <p style={{ color: "var(--text-secondary)" }}>Manage your events, track registrations, and analyze performance</p>
           </div>
-          <Link href="/events/create" className="btn-primary" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.875rem" }}>
-            <Plus size={15} />New Event
-          </Link>
         </div>
 
         {/* Stats */}
         {dashboardStats && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
             {[
               { label: "Total Events", value: dashboardStats.totalEvents, color: "#6366f1" },
-              { label: "Active", value: dashboardStats.activeEvents, color: "#10b981" },
-              { label: "Registrations", value: dashboardStats.totalRegistrations, color: "#8b5cf6" },
-              { label: "Attendance", value: dashboardStats.totalAttendance, color: "#06b6d4" },
-              { label: "Views", value: dashboardStats.totalViews, color: "#f59e0b" },
-              { label: "Likes", value: dashboardStats.totalLikes, color: "#ef4444" },
+              { label: "Active Events", value: dashboardStats.activeEvents, color: "#10b981" },
             ].map((stat) => (
               <div key={stat.label} className="glass-card" style={{ padding: "1rem 1.25rem" }}>
                 <div style={{ fontSize: "1.5rem", fontWeight: 800, color: stat.color, fontFamily: "var(--font-display)" }}>{stat.value}</div>
@@ -152,23 +174,6 @@ export default function OrganizerPage() {
             ))}
           </div>
         )}
-
-        {/* Quick links */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "0.75rem", marginBottom: "2rem" }}>
-          {[
-            { href: "/analytics", icon: BarChart2, label: "View Full Analytics", color: "#6366f1" },
-            { href: "/qr-checkin", icon: Users, label: "Manage Check-ins", color: "#06b6d4" },
-            { href: "/events/archive", icon: Archive, label: "Event Archive", color: "#f59e0b" },
-          ].map(({ href, icon: Icon, label, color }) => (
-            <Link key={href} href={href} style={{ textDecoration: "none" }}>
-              <div className="glass-card" style={{ padding: "1rem 1.25rem", display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }}>
-                <Icon size={18} color={color} />
-                <span style={{ fontSize: "0.875rem", fontWeight: 500 }}>{label}</span>
-                <ChevronRight size={14} style={{ marginLeft: "auto", color: "var(--text-muted)" }} />
-              </div>
-            </Link>
-          ))}
-        </div>
 
         {/* Active Events */}
         <div style={{ marginBottom: "2rem" }}>

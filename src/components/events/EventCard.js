@@ -8,6 +8,9 @@ import {
   MapPin,
   Users,
   Heart,
+  Clock,
+  Check,
+  Tag,
 } from "lucide-react";
 import { formatDate, getDaysUntilDeadline, isDeadlinePassed } from "../../lib/utils/formatDate";
 
@@ -107,7 +110,7 @@ export function EventCard({ event, userId, liked = false, registered = false, co
               textTransform: "uppercase",
             }}
           >
-            ★ CAMPUS_PULSE ★
+            CAMPUS PULSE
           </div>
         </div>
       )}
@@ -140,8 +143,11 @@ export function EventCard({ event, userId, liked = false, registered = false, co
               border: "2px solid var(--border)",
               borderRadius: "var(--radius-full)",
               boxShadow: "1.5px 1.5px 0px 0px var(--border)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.25rem",
             }}>
-              ⏳ {daysLeft}d left!
+              <Clock size={10} strokeWidth={3} /> {daysLeft}d left!
             </span>
           )}
           {registered && (
@@ -155,8 +161,11 @@ export function EventCard({ event, userId, liked = false, registered = false, co
               border: "2px solid var(--border)",
               borderRadius: "var(--radius-full)",
               boxShadow: "1.5px 1.5px 0px 0px var(--border)",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.25rem",
             }}>
-              ✓ Joined
+              <Check size={10} strokeWidth={3} /> Joined
             </span>
           )}
         </div>
@@ -209,24 +218,45 @@ export function EventCard({ event, userId, liked = false, registered = false, co
         </div>
 
         {/* Tags capsules list */}
-        {!compact && event.tags?.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", marginBottom: "0.85rem" }}>
-            {event.tags.slice(0, 3).map((tag) => (
-              <span key={tag} style={{
-                padding: "0.15rem 0.55rem",
-                fontSize: "0.68rem",
-                fontWeight: 700,
-                fontFamily: "var(--font-sans)",
-                background: "var(--bg-elevated)",
-                color: "var(--text-secondary)",
-                border: "1.5px solid var(--border)",
-                borderRadius: "var(--radius-full)",
-              }}>
-                #{tag.toLowerCase()}
-              </span>
-            ))}
-          </div>
-        )}
+        {!compact && (() => {
+          const getTagsArray = () => {
+            if (!event.tags) return [];
+            if (Array.isArray(event.tags)) return event.tags.filter(t => typeof t === "string");
+            if (typeof event.tags === "string") {
+              return event.tags.split(",").map(t => t.trim()).filter(Boolean);
+            }
+            return [];
+          };
+          const tagsList = getTagsArray();
+          if (tagsList.length === 0) return null;
+          return (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem", marginBottom: "0.85rem" }}>
+              {tagsList.slice(0, 3).map((tag, idx) => {
+                const cleanTag = tag.trim();
+                const displayTag = cleanTag.startsWith("#") ? cleanTag.slice(1) : cleanTag;
+                if (!displayTag) return null;
+                return (
+                  <span key={`${displayTag}-${idx}`} style={{
+                    padding: "0.15rem 0.55rem",
+                    fontSize: "0.68rem",
+                    fontWeight: 700,
+                    fontFamily: "var(--font-sans)",
+                    background: "var(--bg-elevated)",
+                    color: "var(--text-primary)",
+                    border: "1.5px solid var(--border)",
+                    borderRadius: "var(--radius-full)",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.2rem"
+                  }}>
+                    <Tag size={10} color="var(--text-secondary)" />
+                    #{displayTag.toLowerCase()}
+                  </span>
+                );
+              })}
+            </div>
+          );
+        })()}
 
         {/* Card bottom footer with wiggling Like pills */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "2px solid var(--border)", paddingTop: "0.75rem", marginTop: "0.5rem" }}>

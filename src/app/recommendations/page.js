@@ -8,7 +8,8 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import {
   Sparkles, RefreshCw, ChevronDown, ChevronUp,
-  Brain, Users, TrendingUp, Clock, Zap, Calendar, MapPin, ArrowRight
+  Brain, Users, TrendingUp, Clock, Zap, Calendar, MapPin, ArrowRight,
+  AlertCircle
 } from "lucide-react";
 import { formatDate } from "../../lib/utils/formatDate";
 import { toPercent, getMatchLabel } from "../../lib/utils/scoreUtils";
@@ -103,7 +104,7 @@ function RecommendationCard({ recommendation, index }) {
               <Sparkles size={16} color="#c084fc" style={{ flexShrink: 0, marginTop: 2, filter: "drop-shadow(0 0 6px rgba(192,132,252,0.6))" }} />
               <div>
                 <strong style={{ color: "white", display: "block", fontSize: "0.72rem", textTransform: "uppercase", fontWeight: 700, letterSpacing: "0.05em", marginBottom: "0.25rem" }}>
-                  ✨ AI Advisor recommendation
+                  AI Advisor recommendation
                 </strong>
                 {recommendation.aiMessage}
               </div>
@@ -230,25 +231,28 @@ export default function RecommendationsPage() {
           </h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
             {[
-              { label: "Semantic", weight: "50%", color: "#6366f1", icon: "🧠" },
-              { label: "Social", weight: "20%", color: "#8b5cf6", icon: "👥" },
-              { label: "Trending", weight: "10%", color: "#06b6d4", icon: "📈" },
-              { label: "Deadline", weight: "10%", color: "#f59e0b", icon: "⏰" },
-              { label: "Freshness", weight: "10%", color: "#10b981", icon: "✨" },
-            ].map((item) => (
-              <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.4rem 0.875rem", background: `${item.color}0d`, border: `1px solid ${item.color}22`, borderRadius: "9999px" }}>
-                <span style={{ fontSize: "0.8rem" }}>{item.icon}</span>
-                <span style={{ fontSize: "0.78rem", fontWeight: 600, color: item.color }}>{item.weight}</span>
-                <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>{item.label}</span>
-              </div>
-            ))}
+              { label: "Semantic", weight: "50%", color: "#6366f1", icon: Brain },
+              { label: "Social", weight: "20%", color: "#8b5cf6", icon: Users },
+              { label: "Trending", weight: "10%", color: "#06b6d4", icon: TrendingUp },
+              { label: "Deadline", weight: "10%", color: "#f59e0b", icon: Clock },
+              { label: "Freshness", weight: "10%", color: "#10b981", icon: Sparkles },
+            ].map((item) => {
+              const IconComp = item.icon;
+              return (
+                <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.4rem 0.875rem", background: `${item.color}0d`, border: `1px solid ${item.color}22`, borderRadius: "9999px" }}>
+                  <IconComp size={12} color={item.color} />
+                  <span style={{ fontSize: "0.78rem", fontWeight: 600, color: item.color }}>{item.weight}</span>
+                  <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>{item.label}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* Results */}
         {!recommendations && !loading && (
-          <div style={{ textAlign: "center", padding: "5rem 2rem", color: "var(--text-muted)" }}>
-            <div style={{ fontSize: "4rem", marginBottom: "1rem" }}>🤖</div>
+          <div style={{ textAlign: "center", padding: "5rem 2rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <Brain size={48} style={{ marginBottom: "1rem", opacity: 0.5 }} />
             <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.75rem" }}>
               Ready to Find Your Events
             </h2>
@@ -261,7 +265,7 @@ export default function RecommendationsPage() {
               className="btn-primary"
               style={{ fontSize: "1rem", padding: "0.75rem 2rem" }}
             >
-              ✨ Get My Recommendations
+              Get My Recommendations
             </button>
           </div>
         )}
@@ -296,8 +300,8 @@ export default function RecommendationsPage() {
         )}
 
         {recommendations && recommendations.length === 0 && (
-          <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-muted)" }}>
-            <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>😕</div>
+          <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <AlertCircle size={48} style={{ marginBottom: "1rem", opacity: 0.5 }} />
             <p>No active events found to recommend. Check back later!</p>
           </div>
         )}

@@ -36,6 +36,7 @@
   --radius-md: 16px;
   --radius-lg: 24px;
   --radius-xl: 32px;
+  --radius-full: 9999px;
 }
 
 .dark {

@@ -110,10 +110,10 @@ export default function FriendsPage() {
   };
 
   const getMatchLabel = (score) => {
-    if (score >= 85) return { text: "✨ Exceptional Match", color: "#10b981", bg: "rgba(16,185,129,0.12)" };
-    if (score >= 65) return { text: "🔥 High Match", color: "#06b6d4", bg: "rgba(6,182,212,0.12)" };
-    if (score >= 40) return { text: "⚡ Good Match", color: "#6366f1", bg: "rgba(99,102,241,0.12)" };
-    return { text: "💬 Compatible Match", color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" };
+    if (score >= 85) return { text: "Exceptional Match", color: "#10b981", bg: "rgba(16,185,129,0.12)" };
+    if (score >= 65) return { text: "High Match", color: "#06b6d4", bg: "rgba(6,182,212,0.12)" };
+    if (score >= 40) return { text: "Good Match", color: "#6366f1", bg: "rgba(99,102,241,0.12)" };
+    return { text: "Compatible Match", color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" };
   };
 
   const isFriend = (peerId) => {
@@ -159,8 +159,8 @@ export default function FriendsPage() {
             width: "fit-content"
           }}>
             {[
-              { key: "my-friends", label: `👥 My Friends (${friends?.length ?? 0})` },
-              { key: "find-peers", label: "🔍 Find Peers" },
+              { key: "my-friends", label: `My Friends (${friends?.length ?? 0})` },
+              { key: "find-peers", label: "Find Peers" },
             ].map((tab) => (
               <button
                 key={tab.key}
@@ -206,8 +206,8 @@ export default function FriendsPage() {
                 <Loader2 size={36} color="#6366f1" style={{ animation: "spin 1s linear infinite" }} />
               </div>
             ) : friends.length === 0 ? (
-              <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center", borderStyle: "dashed" }}>
-                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>👥</div>
+              <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center", borderStyle: "dashed", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Users size={48} style={{ marginBottom: "1rem", color: "var(--text-muted)", opacity: 0.5 }} />
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "white", marginBottom: "0.5rem" }}>
                   Your friends list is currently empty
                 </h3>
@@ -273,7 +273,7 @@ export default function FriendsPage() {
                                     border: `1px solid ${isMutual ? "rgba(99,102,241,0.25)" : "rgba(255,255,255,0.06)"}`,
                                     fontWeight: isMutual ? 600 : 400
                                   }}>
-                                    {interest} {isMutual && "✨"}
+                                    {interest} {isMutual && " (mutual)"}
                                   </span>
                                 );
                               })}
@@ -318,10 +318,10 @@ export default function FriendsPage() {
         {activeTab === "find-peers" && (
           <div>
             {!searchQuery ? (
-              <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center" }}>
-                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🧭</div>
+              <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                <Compass size={48} style={{ marginBottom: "1rem", color: "var(--text-muted)", opacity: 0.5 }} />
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 600, color: "white", marginBottom: "0.5rem" }}>
-                  Search for Campus Peers
+                  Search for Classmates
                 </h3>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "450px", margin: "0 auto" }}>
                   Find classmate profiles, filter by hobbies or technical stacks, and instantly view your mutual AI profile matching score!
@@ -391,7 +391,7 @@ export default function FriendsPage() {
                                     border: `1px solid ${isMutual ? "rgba(99,102,241,0.25)" : "rgba(255,255,255,0.06)"}`,
                                     fontWeight: isMutual ? 600 : 400
                                   }}>
-                                    {interest} {isMutual && "✨"}
+                                    {interest} {isMutual && " (mutual)"}
                                   </span>
                                 );
                               })}

@@ -31,7 +31,7 @@ function TeammateTagInput({ invites, onChange, placeholder }) {
         <span key={invite} className="tag-chip" style={{ display: "inline-flex", alignItems: "center", gap: "0.25rem" }}>
           <Mail size={11} />
           {invite}
-          <button type="button" onClick={() => removeInvite(invite)} style={{ background: "none", border: "none", color: "#818cf8", cursor: "pointer", fontSize: "0.85rem", lineHeight: 1 }}>
+          <button type="button" onClick={() => removeInvite(invite)} style={{ cursor: "pointer", marginLeft: "0.25rem" }}>
             ×
           </button>
         </span>
@@ -54,7 +54,7 @@ function TeammateTagInput({ invites, onChange, placeholder }) {
         style={{
           border: "none",
           background: "transparent",
-          color: "white",
+          color: "var(--text-primary)",
           outline: "none",
           fontSize: "0.8rem",
           flex: 1,
@@ -146,24 +146,46 @@ function ManageTeammatesModal({ team, userId, onClose }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "1rem" }} onClick={onClose}>
-      <div className="glass-card" style={{ width: "100%", maxWidth: 500, padding: "1.75rem", maxHeight: "90vh", overflowY: "auto" }} onClick={(e) => e.stopPropagation()}>
+      <div 
+        style={{ 
+          width: "100%", 
+          maxWidth: 500, 
+          padding: "1.75rem", 
+          maxHeight: "90vh", 
+          overflowY: "auto",
+          background: "var(--bg-card)",
+          border: "3px solid var(--border)",
+          borderRadius: "var(--radius-md)",
+          boxShadow: "8px 8px 0px 0px var(--shadow-color)",
+          position: "relative"
+        }} 
+        onClick={(e) => e.stopPropagation()}
+      >
         
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
           <div>
-            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <Settings size={18} color="#6366f1" />
+            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.1rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              <Settings size={18} color="var(--color-primary)" />
               Manage Team: {team.name}
             </h2>
-            <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "0.15rem" }}>
+            <p style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginTop: "0.15rem", fontWeight: 500 }}>
               Invite teammates, approve requests, and manage active classmates
             </p>
           </div>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}><X size={18} /></button>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)" }}><X size={18} /></button>
         </div>
 
         {/* Tab Selection inside Modal */}
-        <div style={{ display: "flex", gap: "0.25rem", background: "rgba(255,255,255,0.03)", padding: 3, borderRadius: "var(--radius-md)", border: "1px solid rgba(255,255,255,0.06)", marginBottom: "1.25rem" }}>
+        <div style={{ 
+          display: "flex", 
+          gap: "0.35rem", 
+          background: "var(--bg-elevated)", 
+          padding: "4px", 
+          borderRadius: "var(--radius-md)", 
+          border: "2px solid var(--border)", 
+          marginBottom: "1.25rem" 
+        }}>
           {[
             { key: "invite", label: "➕ Invite Classmates" },
             { key: "roster", label: `👥 Active Roster (${acceptedMembers.length + pendingMembers.length})` }
@@ -173,12 +195,18 @@ function ManageTeammatesModal({ team, userId, onClose }) {
               type="button"
               onClick={() => setModalTab(tab.key)}
               style={{
-                flex: 1, padding: "0.45rem", borderRadius: "calc(var(--radius-md) - 2px)",
-                border: "none", cursor: "pointer",
-                background: modalTab === tab.key ? "rgba(99,102,241,0.15)" : "transparent",
-                color: modalTab === tab.key ? "#a5b4fc" : "var(--text-secondary)",
-                fontSize: "0.8rem", fontWeight: modalTab === tab.key ? 600 : 400,
-                transition: "all 0.2s"
+                flex: 1, 
+                padding: "0.5rem", 
+                borderRadius: "calc(var(--radius-md) - 6px)",
+                border: modalTab === tab.key ? "2px solid var(--border)" : "2px solid transparent", 
+                cursor: "pointer",
+                background: modalTab === tab.key ? "var(--color-accent)" : "transparent",
+                color: modalTab === tab.key ? "var(--text-primary)" : "var(--text-secondary)",
+                fontSize: "0.78rem", 
+                fontWeight: 800,
+                boxShadow: modalTab === tab.key ? "2px 2px 0px 0px var(--shadow-color)" : "none",
+                transform: modalTab === tab.key ? "translate(-1px, -1px)" : "none",
+                transition: "all 0.15s"
               }}
             >
               {tab.label}
@@ -217,8 +245,8 @@ function ManageTeammatesModal({ team, userId, onClose }) {
             </div>
 
             {/* Directory search peer to add */}
-            <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "1rem" }}>
-              <label style={{ display: "block", fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: "0.4rem", fontWeight: 600 }}>
+            <div style={{ borderTop: "2px dashed var(--border)", paddingTop: "1rem" }}>
+              <label style={{ display: "block", fontSize: "0.8rem", color: "var(--text-secondary)", marginBottom: "0.4rem", fontWeight: 700 }}>
                 Search & Invite Campus Directory
               </label>
               <div style={{ position: "relative", marginBottom: "0.75rem" }}>
@@ -234,13 +262,13 @@ function ManageTeammatesModal({ team, userId, onClose }) {
               </div>
 
               {searchQuery && (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", maxHeight: "180px", overflowY: "auto" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", maxHeight: "180px", overflowY: "auto" }}>
                   {searchResults === undefined ? (
                     <div style={{ textAlign: "center", padding: "1rem" }}>
-                      <Loader2 size={16} className="animate-spin" color="#6366f1" />
+                      <Loader2 size={16} className="animate-spin" color="var(--color-primary)" />
                     </div>
                   ) : searchResults.length === 0 ? (
-                    <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", textAlign: "center", padding: "0.5rem" }}>
+                    <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", textAlign: "center", padding: "0.5rem", fontWeight: 500 }}>
                       No classmates found matching "{searchQuery}"
                     </p>
                   ) : (
@@ -249,31 +277,37 @@ function ManageTeammatesModal({ team, userId, onClose }) {
                       const isAlreadyAccepted = acceptedMembers.some((m) => m.userId === peer._id);
 
                       return (
-                        <div key={peer._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem 0.75rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-md)" }}>
+                        <div key={peer._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem 0.75rem", background: "var(--bg-elevated)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                             <img
                               src={peer.imageUrl ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(peer.name)}&background=6366f1&color=fff`}
                               alt={peer.name}
-                              style={{ width: 28, height: 28, borderRadius: "50%" }}
+                              style={{ width: 28, height: 28, borderRadius: "50%", border: "1.5px solid var(--border)" }}
                             />
                             <div>
-                              <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "white" }}>{peer.name}</div>
-                              <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{peer.department} · {peer.year}</div>
+                              <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)" }}>{peer.name}</div>
+                              <div style={{ fontSize: "0.68rem", color: "var(--text-secondary)", fontWeight: 500 }}>{peer.department} · {peer.year}</div>
                             </div>
                           </div>
 
                           <div>
                             {isAlreadyAccepted ? (
-                              <span style={{ fontSize: "0.7rem", color: "#10b981", fontWeight: 500 }}>Active Member</span>
+                              <span style={{ fontSize: "0.7rem", color: "var(--text-primary)", fontWeight: 700, background: "var(--color-success)", padding: "0.2rem 0.5rem", border: "1.5px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "1.5px 1.5px 0px 0px var(--shadow-color)" }}>Active Member</span>
                             ) : isAlreadyPending ? (
-                              <span style={{ fontSize: "0.7rem", color: "#f59e0b", fontWeight: 500 }}>Invite Sent</span>
+                              <span style={{ fontSize: "0.7rem", color: "var(--text-primary)", fontWeight: 700, background: "var(--color-accent)", padding: "0.2rem 0.5rem", border: "1.5px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "1.5px 1.5px 0px 0px var(--shadow-color)" }}>Invite Sent</span>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => handleInviteSingle(peer.email)}
                                 disabled={loading}
                                 className="btn-primary"
-                                style={{ fontSize: "0.7rem", padding: "0.25rem 0.6rem" }}
+                                style={{ 
+                                  fontSize: "0.7rem", 
+                                  padding: "0.3rem 0.65rem",
+                                  boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+                                  borderRadius: "var(--radius-sm)",
+                                  transform: "none"
+                                }}
                               >
                                 Invite Teammate
                               </button>
@@ -296,24 +330,24 @@ function ManageTeammatesModal({ team, userId, onClose }) {
             
             {/* Accepted Roster */}
             <div>
-              <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.5rem", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "0.25rem" }}>
+              <div style={{ fontSize: "0.75rem", color: "var(--text-primary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.5rem", borderBottom: "2px dashed var(--border)", paddingBottom: "0.25rem" }}>
                 Active Members ({acceptedMembers.length})
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                 {acceptedMembers.map((member) => member.user && (
-                  <div key={member._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem 0.75rem", background: "rgba(16,185,129,0.03)", border: "1px solid rgba(16,185,129,0.1)", borderRadius: "var(--radius-md)" }}>
+                  <div key={member._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem 0.75rem", background: "var(--bg-elevated)", border: "2px solid var(--color-success)", borderRadius: "var(--radius-sm)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                       <img
                         src={member.user.imageUrl ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(member.user.name)}&background=6366f1&color=fff`}
                         alt={member.user.name}
-                        style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover" }}
+                        style={{ width: 30, height: 30, borderRadius: "50%", border: "1.5px solid var(--border)", objectFit: "cover" }}
                       />
                       <div>
-                        <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "white", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.3rem" }}>
                           {member.user.name}
                           {team.createdBy === member.userId && <Crown size={12} color="#f59e0b" title="Creator" />}
                         </div>
-                        <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{member.user.department || "Student"} · {member.user.year || ""}</div>
+                        <div style={{ fontSize: "0.68rem", color: "var(--text-secondary)", fontWeight: 500 }}>{member.user.department || "Student"} · {member.user.year || ""}</div>
                       </div>
                     </div>
 
@@ -322,7 +356,15 @@ function ManageTeammatesModal({ team, userId, onClose }) {
                         onClick={() => handleRemove(member.userId, member.user.name, false)}
                         disabled={loading}
                         className="btn-ghost"
-                        style={{ padding: "0.25rem", color: "#ef4444", borderColor: "transparent", cursor: "pointer" }}
+                        style={{ 
+                          padding: "0.3rem", 
+                          color: "var(--color-danger)", 
+                          border: "2px solid var(--border)", 
+                          boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+                          borderRadius: "var(--radius-sm)",
+                          transform: "none",
+                          cursor: "pointer" 
+                        }}
                         title="Remove Teammate"
                       >
                         <UserMinus size={14} />
@@ -336,21 +378,21 @@ function ManageTeammatesModal({ team, userId, onClose }) {
             {/* Pending Invites */}
             {pendingMembers.length > 0 && (
               <div>
-                <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.5rem", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "0.25rem" }}>
+                <div style={{ fontSize: "0.75rem", color: "var(--text-primary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.5rem", borderBottom: "2px dashed var(--border)", paddingBottom: "0.25rem" }}>
                   Pending Invitations ({pendingMembers.length})
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {pendingMembers.map((member) => member.user && (
-                    <div key={member._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem 0.75rem", background: "rgba(245,158,11,0.03)", border: "1px solid rgba(245,158,11,0.1)", borderRadius: "var(--radius-md)" }}>
+                    <div key={member._id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.5rem 0.75rem", background: "var(--bg-elevated)", border: "2px solid var(--color-accent)", borderRadius: "var(--radius-sm)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <img
                           src={member.user.imageUrl ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(member.user.name)}&background=6366f1&color=fff`}
                           alt={member.user.name}
-                          style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover" }}
+                          style={{ width: 30, height: 30, borderRadius: "50%", border: "1.5px solid var(--border)", objectFit: "cover" }}
                         />
                         <div>
-                          <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "white" }}>{member.user.name}</div>
-                          <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{member.user.department}</div>
+                          <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)" }}>{member.user.name}</div>
+                          <div style={{ fontSize: "0.68rem", color: "var(--text-secondary)", fontWeight: 500 }}>{member.user.department}</div>
                         </div>
                       </div>
 
@@ -358,7 +400,15 @@ function ManageTeammatesModal({ team, userId, onClose }) {
                         onClick={() => handleRemove(member.userId, member.user.name, true)}
                         disabled={loading}
                         className="btn-ghost"
-                        style={{ fontSize: "0.7rem", padding: "0.2rem 0.5rem", color: "#f87171", borderColor: "rgba(239,68,68,0.2)" }}
+                        style={{ 
+                          fontSize: "0.7rem", 
+                          padding: "0.3rem 0.65rem", 
+                          color: "var(--color-danger)", 
+                          border: "2px solid var(--border)",
+                          boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+                          borderRadius: "var(--radius-sm)",
+                          transform: "none"
+                        }}
                       >
                         Revoke Invite
                       </button>
@@ -405,10 +455,22 @@ function CreateTeamModal({ eventId, userId, onClose, onCreated }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100, padding: "1rem" }} onClick={onClose}>
-      <div className="glass-card" style={{ width: "100%", maxWidth: 460, padding: "1.75rem" }} onClick={(e) => e.stopPropagation()}>
+      <div 
+        style={{ 
+          width: "100%", 
+          maxWidth: 460, 
+          padding: "1.75rem",
+          background: "var(--bg-card)",
+          border: "3px solid var(--border)",
+          borderRadius: "var(--radius-md)",
+          boxShadow: "8px 8px 0px 0px var(--shadow-color)",
+          position: "relative"
+        }} 
+        onClick={(e) => e.stopPropagation()}
+      >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
-          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem" }}>Create New Team</h2>
-          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)" }}><X size={18} /></button>
+          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.1rem" }}>Create New Team</h2>
+          <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-secondary)" }}><X size={18} /></button>
         </div>
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
           <div>
@@ -471,8 +533,7 @@ function CreateTeamModal({ eventId, userId, onClose, onCreated }) {
   );
 }
 
-function TeamCard({ team, userId, onManageTeam }) {
-  const joinTeam = useMutation(api.teams.joinTeam);
+function TeamCard({ team, userId, onManageTeam, isFriendTeam, friendsList, onRequestToJoin }) {
   const leaveTeam = useMutation(api.teams.leaveTeam);
   const [loading, setLoading] = useState(false);
 
@@ -487,17 +548,6 @@ function TeamCard({ team, userId, onManageTeam }) {
   const isCreator = team.createdBy === userId;
   const isFull = team.maxMembers && acceptedMembers.length >= team.maxMembers;
 
-  const handleJoin = async () => {
-    setLoading(true);
-    try {
-      await joinTeam({ teamId: team._id, userId });
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleLeave = async () => {
     if (!confirm("Leave this team?")) return;
     setLoading(true);
@@ -509,7 +559,7 @@ function TeamCard({ team, userId, onManageTeam }) {
   };
 
   return (
-    <div className="glass-card" style={{ padding: "1.25rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+    <div className={`glass-card ${isFriendTeam && !isMember && !isCreator ? "glowing-purple-card" : ""}`} style={{ padding: "1.25rem", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.875rem" }}>
           <div style={{ flex: 1 }}>
@@ -519,6 +569,7 @@ function TeamCard({ team, userId, onManageTeam }) {
               {isMember && !isCreator && <span className="badge badge-success" style={{ fontSize: "0.65rem" }}>Joined</span>}
               {isPending && <span className="badge badge-warning" style={{ fontSize: "0.65rem" }}>Pending Invite</span>}
               {isRequested && <span className="badge badge-cyan" style={{ fontSize: "0.65rem" }}>Requested</span>}
+              {isFriendTeam && !isMember && !isCreator && <span className="badge badge-cyan" style={{ fontSize: "0.65rem", background: "var(--color-primary)", color: "white" }}>✨ Friends Inside</span>}
             </div>
             {team.description && (
               <p style={{ color: "var(--text-secondary)", fontSize: "0.78rem", lineHeight: 1.4 }}>
@@ -555,27 +606,48 @@ function TeamCard({ team, userId, onManageTeam }) {
         {/* Pending Invites */}
         {pendingMembers.length > 0 && (
           <div style={{ marginBottom: "0.875rem" }}>
-            <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 600, textTransform: "uppercase", marginBottom: "0.35rem" }}>
+            <div style={{ fontSize: "0.68rem", color: "var(--text-secondary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.35rem" }}>
               Pending Invites ({pendingMembers.length})
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", flexWrap: "wrap", opacity: 0.6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", flexWrap: "wrap" }}>
               {pendingMembers.map((member) => member.user && (
-                <span key={member._id} style={{ display: "inline-flex", alignItems: "center", gap: "0.2rem", fontSize: "0.7rem", padding: "0.15rem 0.4rem", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "4px", color: "var(--text-muted)" }}>
+                <span key={member._id} style={{ display: "inline-flex", alignItems: "center", gap: "0.2rem", fontSize: "0.7rem", padding: "0.2rem 0.5rem", background: "var(--bg-elevated)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--text-secondary)", fontWeight: 700 }}>
                   {member.user.name}
                 </span>
               ))}
             </div>
           </div>
         )}
+
+        {/* Friends listing inside card */}
+        {isFriendTeam && friendsList && friendsList.length > 0 && (
+          <div style={{ marginTop: "0.75rem", padding: "0.4rem 0.6rem", background: "var(--bg-elevated)", border: "2px dashed var(--border)", borderRadius: "var(--radius-sm)" }}>
+            <div style={{ fontSize: "0.65rem", color: "var(--text-secondary)", fontWeight: 800, textTransform: "uppercase", marginBottom: "0.15rem" }}>
+              Friends in Team
+            </div>
+            <div style={{ fontSize: "0.72rem", color: "var(--text-primary)", fontWeight: 700 }}>
+              {friendsList.map(f => f.name).join(", ")}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Actions */}
-      <div style={{ display: "flex", gap: "0.5rem", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "0.75rem", marginTop: "0.5rem" }}>
+      <div style={{ display: "flex", gap: "0.5rem", borderTop: "2px dashed var(--border)", paddingTop: "0.75rem", marginTop: "0.5rem" }}>
         {isCreator && (
           <button
             onClick={() => onManageTeam(team)}
             className="btn-primary"
-            style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.75rem", flex: 1, justifyContent: "center", background: "linear-gradient(135deg, #06b6d4, #6366f1)" }}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.35rem", 
+              fontSize: "0.75rem", 
+              flex: 1, 
+              justifyContent: "center",
+              padding: "0.5rem 1rem",
+              borderRadius: "var(--radius-full)"
+            }}
           >
             <Users size={12} /> Manage Team
           </button>
@@ -585,22 +657,41 @@ function TeamCard({ team, userId, onManageTeam }) {
             onClick={handleLeave}
             className="btn-ghost"
             disabled={loading}
-            style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.75rem", flex: 1, justifyContent: "center" }}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.35rem", 
+              fontSize: "0.75rem", 
+              flex: 1, 
+              justifyContent: "center",
+              padding: "0.5rem 1rem",
+              borderRadius: "var(--radius-full)"
+            }}
           >
             <LogOut size={12} />Leave
           </button>
-        ) : (
+        ) : isFriendTeam ? (
           <button
-            id={`join-team-${team._id}`}
-            onClick={handleJoin}
-            className="btn-primary"
+            id={`request-join-team-${team._id}`}
+            onClick={onRequestToJoin}
+            className="btn-secondary"
             disabled={loading || isFull || isPending || isRequested}
-            style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.75rem", flex: 1, justifyContent: "center", opacity: (isFull || isPending || isRequested) ? 0.5 : 1 }}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.35rem", 
+              fontSize: "0.75rem", 
+              flex: 1, 
+              justifyContent: "center",
+              padding: "0.5rem 1rem",
+              borderRadius: "var(--radius-full)",
+              opacity: (isFull || isPending || isRequested) ? 0.5 : 1 
+            }}
           >
             {loading ? <Loader2 size={12} style={{ animation: "spin 1s linear infinite" }} /> : <UserPlus size={12} />}
-            {isFull ? "Team Full" : isPending ? "Invite Pending" : isRequested ? "Request Dispatched" : "Join Team"}
+            {isFull ? "Team Full" : isPending ? "Invite Pending" : isRequested ? "Request Dispatched" : "Request to Join"}
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   );
@@ -618,9 +709,25 @@ export default function TeamsPage() {
   const [activeTab, setActiveTab] = useState("find-teams"); // "find-teams", "my-teams", "directory"
   const [directoryQuery, setDirectoryQuery] = useState("");
   const [selectedInviteTeamId, setSelectedInviteTeamId] = useState("");
+  const [eventSearch, setEventSearch] = useState("");
+  const [hasInitializedEvent, setHasInitializedEvent] = useState(false);
 
   // Queries
   const events = useQuery(api.events.listActiveEvents, {});
+  const userRegistrations = useQuery(
+    api.registrations.getUserRegistrations,
+    user ? { userId: user._id } : "skip"
+  );
+  
+  const registeredActiveEvents = (userRegistrations ?? [])
+    .map((r) => r.event)
+    .filter((e) => e && !e.isArchived);
+
+  // Search filtered events based on the eventSearch input
+  const searchedActiveEvents = registeredActiveEvents.filter(
+    (e) => !eventSearch || e.title.toLowerCase().includes(eventSearch.toLowerCase())
+  );
+
   const teams = useQuery(
     api.teams.getEventTeams,
     selectedEventId ? { eventId: selectedEventId } : "skip"
@@ -655,11 +762,43 @@ export default function TeamsPage() {
   const requestToJoin = useMutation(api.teams.requestToJoinTeam);
   const inviteTeammate = useMutation(api.teams.inviteTeammateByEmailOrName);
 
-  const selectedEvent = events?.find((e) => e._id === selectedEventId);
+  const selectedEvent = registeredActiveEvents?.find((e) => e._id === selectedEventId);
+  const userHasTeamForSelectedEvent = !!(selectedEventId && (myAllTeams ?? []).some(
+    (t) => t.eventId === selectedEventId && t.userStatus === "accepted"
+  ));
 
-  const filteredTeams = (teams ?? []).filter(
-    (t) => !search || t.name.toLowerCase().includes(search.toLowerCase())
-  );
+  // Automatically select the first registered active event if none is selected and we haven't initialized yet
+  if (registeredActiveEvents.length > 0 && !selectedEventId && !hasInitializedEvent) {
+    setSelectedEventId(registeredActiveEvents[0]._id);
+    setHasInitializedEvent(true);
+  }
+
+  const filteredTeams = (teams ?? []).filter((t) => {
+    // 1. Text Search matching
+    if (search && !t.name.toLowerCase().includes(search.toLowerCase())) {
+      return false;
+    }
+
+    // 2. Is current user creator?
+    const isCreator = t.createdBy === user?._id;
+
+    // 3. Is current user involved (accepted, pending, or requested)?
+    const isMemberOrInvolved = (t.members ?? []).some((m) => m.userId === user?._id);
+
+    // If the user is the creator or already involved, remove from browser (keep strictly in My Teams)
+    if (isCreator || isMemberOrInvolved) {
+      return false;
+    }
+
+    // 4. Does current user have friends inside this team?
+    const isFriendTeam = friendsTeams?.some((ft) => ft._id === t._id);
+
+    // If friends' teams query is still loading, keep it in the list to avoid visual layout shifts
+    if (friendsTeams === undefined) return true;
+
+    // Only keep friends' teams in the "Find & Join Teams" catalog
+    return isFriendTeam;
+  });
 
   // Filter owned teams where current user is the owner/creator
   const ownedTeams = (myAllTeams ?? []).filter(
@@ -779,10 +918,10 @@ export default function TeamsPage() {
   };
 
   const getMatchLabel = (score) => {
-    if (score >= 85) return { text: "✨ Exceptional Match", color: "#10b981", bg: "rgba(16,185,129,0.12)" };
-    if (score >= 65) return { text: "🔥 High Match", color: "#06b6d4", bg: "rgba(6,182,212,0.12)" };
-    if (score >= 40) return { text: "⚡ Good Match", color: "#6366f1", bg: "rgba(99,102,241,0.12)" };
-    return { text: "💬 Compatible Match", color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" };
+    if (score >= 85) return { text: "Exceptional Match", color: "#10b981", bg: "rgba(16,185,129,0.12)" };
+    if (score >= 65) return { text: "High Match", color: "#06b6d4", bg: "rgba(6,182,212,0.12)" };
+    if (score >= 40) return { text: "Good Match", color: "#6366f1", bg: "rgba(99,102,241,0.12)" };
+    return { text: "Compatible Match", color: "#8b5cf6", bg: "rgba(139,92,246,0.12)" };
   };
 
   return (
@@ -793,29 +932,40 @@ export default function TeamsPage() {
         {/* Header */}
         <div style={{ marginBottom: "2rem" }}>
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "2.25rem", marginBottom: "0.5rem", display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg,#06b6d4,#8b5cf6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ 
+              width: 44, 
+              height: 44, 
+              borderRadius: "var(--radius-sm)", 
+              background: "var(--color-primary)", 
+              display: "flex", 
+              alignItems: "center", 
+              justifyContent: "center",
+              border: "2px solid var(--border)",
+              boxShadow: "2px 2px 0px 0px var(--shadow-color)"
+            }}>
               <Users size={22} color="white" />
             </div>
-            Team Assembly
+            Find & Form Teams
           </h1>
-          <p style={{ color: "var(--text-secondary)" }}>Form teams, search peer directories, and manage your collaborative event rosters</p>
+          <p style={{ color: "var(--text-secondary)" }}>Form groups, invite teammates, and coordinate with friends for upcoming campus events</p>
         </div>
 
         {/* Global Segmented Tab Selector */}
         <div style={{ 
           display: "flex", 
-          gap: "0.3rem", 
-          background: "rgba(255,255,255,0.03)", 
-          padding: 4, 
+          gap: "0.35rem", 
+          background: "var(--bg-elevated)", 
+          padding: 6, 
           borderRadius: "var(--radius-lg)", 
-          border: "1px solid rgba(255,255,255,0.06)", 
+          border: "2px solid var(--border)", 
           marginBottom: "2rem",
-          maxWidth: "550px"
+          maxWidth: "550px",
+          boxShadow: "3px 3px 0px 0px var(--shadow-color)"
         }}>
           {[
-            { key: "find-teams", label: "🌐 Find & Join Teams" },
-            { key: "my-teams", label: `👥 My Teams Dashboard ${myAllTeams && myAllTeams.length > 0 ? `(${myAllTeams.length})` : ""}` },
-            { key: "directory", label: "🔍 Campus Classmates & Invite" }
+            { key: "find-teams", label: "Find & Join Teams" },
+            { key: "my-teams", label: `My Teams ${myAllTeams && myAllTeams.length > 0 ? `(${myAllTeams.length})` : ""}` },
+            { key: "directory", label: "Invite Classmates" }
           ].map((tab) => (
             <button
               key={tab.key}
@@ -824,12 +974,14 @@ export default function TeamsPage() {
                 flex: 1,
                 padding: "0.55rem 1rem",
                 borderRadius: "var(--radius-md)",
-                border: "none",
+                border: activeTab === tab.key ? "2px solid var(--border)" : "2px solid transparent",
                 cursor: "pointer",
-                background: activeTab === tab.key ? "rgba(99,102,241,0.18)" : "transparent",
-                color: activeTab === tab.key ? "#a5b4fc" : "var(--text-secondary)",
+                background: activeTab === tab.key ? "var(--color-primary)" : "transparent",
+                color: activeTab === tab.key ? "white" : "var(--text-secondary)",
                 fontSize: "0.82rem",
-                fontWeight: activeTab === tab.key ? 700 : 400,
+                fontWeight: 800,
+                boxShadow: activeTab === tab.key ? "2.5px 2.5px 0px 0px var(--shadow-color)" : "none",
+                transform: activeTab === tab.key ? "translate(-1.5px, -1.5px)" : "none",
                 transition: "all 0.2s"
               }}
             >
@@ -843,172 +995,216 @@ export default function TeamsPage() {
           <div>
             {/* Event Filter Selector */}
             <div className="glass-card" style={{ padding: "1.25rem", marginBottom: "1.5rem" }}>
-              <label style={{ display: "block", fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "0.5rem", fontWeight: 500 }}>
-                Select Active Event to Browse Teams
+              <label style={{ display: "block", fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "0.5rem", fontWeight: 750 }}>
+                Search Registered Event to Browse Teams
               </label>
-              <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-                {events === undefined ? (
-                  <div className="skeleton" style={{ height: 38, width: 200, borderRadius: "var(--radius-md)" }} />
-                ) : (events ?? []).filter((e) => !e.isArchived).map((event) => (
-                  <button
-                    key={event._id}
-                    id={`event-filter-${event._id}`}
-                    onClick={() => setSelectedEventId(event._id)}
-                    style={{
-                      padding: "0.45rem 1rem",
-                      borderRadius: "9999px",
-                      border: `1px solid ${selectedEventId === event._id ? "rgba(99,102,241,0.4)" : "rgba(255,255,255,0.1)"}`,
-                      background: selectedEventId === event._id ? "rgba(99,102,241,0.15)" : "transparent",
-                      color: selectedEventId === event._id ? "#a5b4fc" : "var(--text-secondary)",
-                      fontSize: "0.8rem",
-                      fontWeight: selectedEventId === event._id ? 600 : 400,
-                      cursor: "pointer",
-                      transition: "all 0.2s",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {event.title.slice(0, 30)}{event.title.length > 30 ? "…" : ""}
-                  </button>
-                ))}
+
+              {/* Event Search Input */}
+              <div style={{ position: "relative", marginBottom: "0.75rem" }}>
+                <Search size={15} style={{ position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
+                <input
+                  type="text"
+                  value={eventSearch}
+                  onChange={(e) => setEventSearch(e.target.value)}
+                  placeholder="Type event name (e.g. hackathon, coding, design)..."
+                  className="input-field"
+                  style={{ paddingLeft: "2.5rem", fontSize: "0.85rem" }}
+                />
               </div>
+
+              {/* Event Search Results Dropdown/List */}
+              {eventSearch && (
+                <div style={{ 
+                  background: "var(--bg-elevated)", 
+                  border: "2px solid var(--border)", 
+                  borderRadius: "var(--radius-sm)", 
+                  boxShadow: "4px 4px 0px 0px var(--shadow-color)",
+                  maxHeight: "220px",
+                  overflowY: "auto",
+                  marginBottom: "1rem"
+                }}>
+                  {searchedActiveEvents.length === 0 ? (
+                    <div style={{ padding: "0.75rem 1rem", fontSize: "0.78rem", color: "var(--text-secondary)", fontWeight: 650 }}>
+                      No registered active events found matching "{eventSearch}"
+                    </div>
+                  ) : (
+                    searchedActiveEvents.map((event) => {
+                      const inTeam = (myAllTeams ?? []).some(
+                        (t) => t.eventId === event._id && t.userStatus === "accepted"
+                      );
+                      return (
+                        <button
+                          key={event._id}
+                          onClick={() => {
+                            setSelectedEventId(event._id);
+                            setEventSearch(""); // clear search input after selection
+                          }}
+                          style={{
+                            width: "100%",
+                            textAlign: "left",
+                            padding: "0.6rem 1rem",
+                            border: "none",
+                            borderBottom: "1.5px solid var(--border)",
+                            background: selectedEventId === event._id ? "var(--color-accent)" : "transparent",
+                            color: "var(--text-primary)",
+                            fontSize: "0.82rem",
+                            fontWeight: 700,
+                            cursor: "pointer",
+                            transition: "background 0.15s",
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center"
+                          }}
+                          onMouseEnter={(e) => {
+                            if (selectedEventId !== event._id) {
+                              e.currentTarget.style.background = "rgba(0,0,0,0.05)";
+                            }
+                          }}
+                          onMouseLeave={(e) => {
+                            if (selectedEventId !== event._id) {
+                              e.currentTarget.style.background = "transparent";
+                            }
+                          }}
+                        >
+                          <span>{event.title}</span>
+                          {inTeam && (
+                            <span style={{
+                              fontSize: "0.65rem",
+                              background: "var(--color-success)",
+                              color: "var(--text-primary)",
+                              padding: "0.15rem 0.45rem",
+                              border: "1.5px solid var(--border)",
+                              borderRadius: "var(--radius-sm)",
+                              boxShadow: "1px 1px 0px 0px var(--shadow-color)",
+                              fontWeight: 800
+                            }}>
+                              ✓ Joined a Team
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })
+                  )}
+                </div>
+              )}
+
+              {/* Selected Event Display Panel */}
+              {selectedEvent ? (
+                <div style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  justifyContent: "space-between", 
+                  background: "var(--color-accent)", 
+                  border: "2px solid var(--border)", 
+                  borderRadius: "var(--radius-sm)", 
+                  padding: "0.5rem 1rem", 
+                  boxShadow: "2px 2px 0px 0px var(--shadow-color)" 
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
+                    <Calendar size={14} color="var(--text-primary)" />
+                    <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                      Browsing Teams for: {selectedEvent.title}
+                    </span>
+                    {(myAllTeams ?? []).some(t => t.eventId === selectedEvent._id && t.userStatus === "accepted") && (
+                      <span style={{
+                        fontSize: "0.65rem",
+                        background: "var(--color-success)",
+                        color: "var(--text-primary)",
+                        padding: "0.1rem 0.45rem",
+                        border: "1.5px solid var(--border)",
+                        borderRadius: "var(--radius-sm)",
+                        boxShadow: "1px 1px 0px 0px var(--shadow-color)",
+                        fontWeight: 800,
+                        marginLeft: "0.4rem"
+                      }}>
+                        ✓ Joined a Team
+                      </span>
+                    )}
+                  </div>
+                  <button 
+                    onClick={() => setSelectedEventId(null)}
+                    style={{
+                      background: "var(--bg-card)",
+                      border: "1.5px solid var(--border)",
+                      borderRadius: "50%",
+                      width: 20,
+                      height: 20,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      fontSize: "0.7rem",
+                      fontWeight: 800,
+                      color: "var(--text-primary)",
+                      boxShadow: "1px 1px 0px 0px var(--shadow-color)"
+                    }}
+                    title="Clear selected event"
+                  >
+                    ×
+                  </button>
+                </div>
+              ) : (
+                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", fontStyle: "italic", fontWeight: 500 }}>
+                  💡 Use the search bar above to select a registered event and browse its teams.
+                </div>
+              )}
             </div>
 
             {selectedEventId ? (
-              <div style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr", gap: "1.5rem", alignItems: "start" }} className="teams-split-layout">
-                {/* Main Event Teams */}
-                <div>
-                  {/* Search and Create Buttons */}
-                  <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-                    <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
-                      <Search size={15} style={{ position: "absolute", left: "0.875rem", top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
-                      <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="input-field"
-                        placeholder="Search teams..."
-                        style={{ paddingLeft: "2.5rem" }}
+              <div>
+                {/* Requirements warning banner */}
+                {selectedEvent?.minMembers && (
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: "var(--radius-md)", color: "#f59e0b", fontSize: "0.78rem", marginBottom: "1.25rem" }}>
+                    <AlertCircle size={15} />
+                    <span>
+                      ⚠️ Event Requirement: Teams must have a minimum of <strong>{selectedEvent.minMembers} members</strong> to be eligible.
+                    </span>
+                  </div>
+                )}
+
+                {/* Create Button Toolbar */}
+                <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+                  <button
+                    id="create-team-btn"
+                    onClick={() => setShowCreate(true)}
+                    className="btn-primary"
+                    disabled={!user || userHasTeamForSelectedEvent}
+                    style={{ 
+                      display: "flex", 
+                      alignItems: "center", 
+                      gap: "0.4rem", 
+                      fontSize: "0.875rem",
+                      opacity: (!user || userHasTeamForSelectedEvent) ? 0.55 : 1,
+                      cursor: (!user || userHasTeamForSelectedEvent) ? "not-allowed" : "pointer"
+                    }}
+                    title={userHasTeamForSelectedEvent ? "You have already joined/created a team for this event" : "Create a new team"}
+                  >
+                    <Plus size={15} />Create Team
+                  </button>
+                </div>
+
+                {/* Grid of Teams */}
+                {teams === undefined ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+                    {Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="skeleton" style={{ height: 180, borderRadius: "var(--radius-lg)" }} />
+                    ))}
+                  </div>
+                ) : filteredTeams.length === 0 ? null : (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
+                    {filteredTeams.map((team) => (
+                      <TeamCard 
+                        key={team._id} 
+                        team={team} 
+                        userId={user?._id} 
+                        onManageTeam={setActiveManageTeam} 
+                        isFriendTeam={friendsTeams?.some((ft) => ft._id === team._id)}
+                        friendsList={friendsTeams?.find((ft) => ft._id === team._id)?.friends}
+                        onRequestToJoin={() => handleRequestToJoin(team._id)}
                       />
-                    </div>
-                    <button
-                      id="create-team-btn"
-                      onClick={() => setShowCreate(true)}
-                      className="btn-primary"
-                      disabled={!user}
-                      style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.875rem" }}
-                    >
-                      <Plus size={15} />Create Team
-                    </button>
+                    ))}
                   </div>
-
-                  {/* Requirements warning banner */}
-                  {selectedEvent?.minMembers && (
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", padding: "0.75rem 1rem", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: "var(--radius-md)", color: "#f59e0b", fontSize: "0.78rem", marginBottom: "1.25rem" }}>
-                      <AlertCircle size={15} />
-                      <span>
-                        ⚠️ Event Requirement: Teams must have a minimum of <strong>{selectedEvent.minMembers} members</strong> to be eligible.
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Grid of Teams */}
-                  {teams === undefined ? (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
-                      {Array.from({ length: 4 }).map((_, i) => (
-                        <div key={i} className="skeleton" style={{ height: 180, borderRadius: "var(--radius-lg)" }} />
-                      ))}
-                    </div>
-                  ) : filteredTeams.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-muted)" }}>
-                      <Users size={48} style={{ margin: "0 auto 1rem", opacity: 0.3 }} />
-                      <p style={{ color: "var(--text-secondary)", fontSize: "1rem", marginBottom: "0.5rem" }}>No teams yet for this event</p>
-                      <p style={{ marginBottom: "1.5rem" }}>Be the first to create a team!</p>
-                      <button onClick={() => setShowCreate(true)} className="btn-primary" style={{ fontSize: "0.9rem" }}>
-                        <Plus size={15} style={{ display: "inline", marginRight: 6 }} />Create First Team
-                      </button>
-                    </div>
-                  ) : (
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
-                      {filteredTeams.map((team) => (
-                        <TeamCard key={team._id} team={team} userId={user?._id} onManageTeam={setActiveManageTeam} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                {/* Sidebar: Friends' incomplete teams */}
-                <div>
-                  <div className="glass-card" style={{ padding: "1.25rem", border: "1px solid rgba(6,182,212,0.15)" }}>
-                    <h3 style={{
-                      fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "0.92rem",
-                      color: "#67e8f9", display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "1rem"
-                    }}>
-                      <Users size={15} color="#06b6d4" />
-                      Friends' Teams
-                    </h3>
-
-                    {friendsTeams === undefined ? (
-                      <div style={{ display: "flex", justifyContent: "center", padding: "1.5rem" }}>
-                        <Loader2 size={20} color="#06b6d4" style={{ animation: "spin 1s linear infinite" }} />
-                      </div>
-                    ) : friendsTeams.length === 0 ? (
-                      <div style={{ textAlign: "center", padding: "1.5rem 0.5rem", color: "var(--text-muted)" }}>
-                        <p style={{ fontSize: "0.78rem", lineHeight: 1.4 }}>
-                          None of your friends have joined incomplete teams for this event yet.
-                        </p>
-                      </div>
-                    ) : (
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
-                        {friendsTeams.map((team) => {
-                          const isLoader = actionLoadingId === team._id;
-                          const hasPending = team.requestedStatus === "pending";
-                          const hasRequested = team.requestedStatus === "requested";
-
-                          return (
-                            <div key={team._id} style={{
-                              padding: "0.875rem", background: "rgba(255,255,255,0.02)",
-                              border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-md)"
-                            }}>
-                              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", fontWeight: 600, color: "white", marginBottom: "0.35rem" }}>
-                                <span>{team.name}</span>
-                                <span style={{ color: "var(--text-muted)", fontSize: "0.72rem" }}>
-                                  {team.membersCount}{team.maxMembers ? `/${team.maxMembers}` : ""}
-                                </span>
-                              </div>
-                              
-                              <div style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginBottom: "0.6rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
-                                <span>Friend: </span>
-                                <strong style={{ color: "#a5b4fc" }}>
-                                  {team.friends.map((f) => f.name).join(", ")}
-                                </strong>
-                              </div>
-
-                              <button
-                                onClick={() => handleRequestToJoin(team._id)}
-                                disabled={isLoader || hasPending || hasRequested}
-                                className="btn-primary"
-                                style={{
-                                  width: "100%", fontSize: "0.75rem", padding: "0.35rem",
-                                  background: "rgba(6,182,212,0.12)", color: "#67e8f9",
-                                  border: "1px solid rgba(6,182,212,0.25)", display: "flex",
-                                  alignItems: "center", justifyContent: "center", gap: "0.25rem",
-                                  opacity: (hasPending || hasRequested) ? 0.6 : 1
-                                }}
-                              >
-                                {isLoader ? (
-                                  <Loader2 size={12} style={{ animation: "spin 1s linear infinite" }} />
-                                ) : (
-                                  <UserPlus size={12} />
-                                )}
-                                {hasPending ? "Invited" : hasRequested ? "Requested" : "Request to Join"}
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                </div>
+                )}
               </div>
             ) : (
               <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-muted)" }}>
@@ -1025,32 +1221,32 @@ export default function TeamsPage() {
           <div>
             {/* Top Notifications & Inbox Banner Panel */}
             {pendingInvitesAndRequests && pendingInvitesAndRequests.length > 0 && (
-              <div className="glass-card" style={{ padding: "1.25rem 1.5rem", marginBottom: "2rem", border: "1px solid rgba(99,102,241,0.25)", background: "rgba(99,102,241,0.05)" }}>
-                <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: "#a5b4fc", display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.875rem" }}>
-                  <AlertCircle size={16} /> Team Invitations & Action Items
+              <div className="glass-card" style={{ padding: "1.25rem 1.5rem", marginBottom: "2rem", border: "2px solid var(--border)", background: "var(--bg-elevated)", boxShadow: "4px 4px 0px 0px var(--shadow-color)" }}>
+                <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.4rem", marginBottom: "0.875rem" }}>
+                  <AlertCircle size={16} color="var(--color-primary)" /> Team Invitations & Requests
                 </h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                   {pendingInvitesAndRequests.map((item) => {
                     const isLoading = actionLoadingId === `${item.teamId}-${item.userId}`;
                     return (
-                      <div key={`${item.teamId}-${item.userId}`} style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "0.75rem", padding: "0.6rem 0.875rem", background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "var(--radius-md)" }}>
-                        <div style={{ fontSize: "0.82rem", color: "var(--text-secondary)" }}>
+                      <div key={`${item.teamId}-${item.userId}`} style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1rem", background: "var(--bg-card)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}>
+                        <div style={{ fontSize: "0.82rem", color: "var(--text-primary)", fontWeight: 500 }}>
                           {item.type === "invite" ? (
                             <span>
-                              👑 <strong>{item.inviter?.name || "Organizer"}</strong> invited you to join team <strong>"{item.team?.name}"</strong> for <em>{item.event?.title}</em>.
+                              <strong style={{ color: "var(--color-primary)" }}>{item.inviter?.name || "Organizer"}</strong> invited you to join team <strong style={{ textDecoration: "underline" }}>"{item.team?.name}"</strong> for <em>{item.event?.title}</em>.
                             </span>
                           ) : (
                             <span>
-                              👋 <strong>{item.requester?.name || "Student"}</strong> requested to join your team <strong>"{item.team?.name}"</strong> for <em>{item.event?.title}</em>.
+                              <strong style={{ color: "var(--color-primary)" }}>{item.requester?.name || "Student"}</strong> requested to join your team <strong style={{ textDecoration: "underline" }}>"{item.team?.name}"</strong> for <em>{item.event?.title}</em>.
                             </span>
                           )}
                         </div>
-                        <div style={{ display: "flex", gap: "0.4rem" }}>
+                        <div style={{ display: "flex", gap: "0.5rem" }}>
                           <button
                             onClick={() => handleAccept(item.teamId, item.userId)}
                             disabled={isLoading}
                             className="btn-primary"
-                            style={{ fontSize: "0.75rem", padding: "0.25rem 0.75rem", background: "#10b981", display: "inline-flex", alignItems: "center", gap: "0.2rem" }}
+                            style={{ fontSize: "0.75rem", padding: "0.35rem 0.85rem", background: "var(--color-success)", color: "var(--text-primary)", display: "inline-flex", alignItems: "center", gap: "0.2rem", borderRadius: "var(--radius-sm)", boxShadow: "2px 2px 0px 0px var(--shadow-color)", transform: "none" }}
                           >
                             {isLoading ? <Loader2 size={12} style={{ animation: "spin 1s linear infinite" }} /> : <Check size={12} />}
                             {item.type === "invite" ? "Accept Invite" : "Approve"}
@@ -1059,7 +1255,7 @@ export default function TeamsPage() {
                             onClick={() => handleDecline(item.teamId, item.userId)}
                             disabled={isLoading}
                             className="btn-ghost"
-                            style={{ fontSize: "0.75rem", padding: "0.25rem 0.75rem", color: "#fca5a5", borderColor: "rgba(239,68,68,0.2)" }}
+                            style={{ fontSize: "0.75rem", padding: "0.35rem 0.85rem", color: "var(--color-danger)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "2px 2px 0px 0px var(--shadow-color)", transform: "none" }}
                           >
                             {item.type === "invite" ? "Decline" : "Reject"}
                           </button>
@@ -1080,9 +1276,9 @@ export default function TeamsPage() {
               </div>
             ) : myAllTeams.length === 0 ? (
               <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center", borderStyle: "dashed" }}>
-                <Users size={48} color="var(--text-muted)" style={{ margin: "0 auto 1rem", opacity: 0.3 }} />
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "white", marginBottom: "0.5rem" }}>You are not in any teams yet</h3>
-                <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", marginBottom: "1.5rem", maxWidth: "450px", margin: "0 auto 1.5rem" }}>
+                <Users size={48} color="var(--text-secondary)" style={{ margin: "0 auto 1rem", opacity: 0.5 }} />
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "0.5rem" }}>You are not in any teams yet</h3>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", marginBottom: "1.5rem", maxWidth: "450px", margin: "0 auto 1.5rem", fontWeight: 500 }}>
                   To start forming a team, select an event in "Find & Join Teams" and click **Create Team**, or request to join a friend's roster.
                 </p>
                 <button onClick={() => setActiveTab("find-teams")} className="btn-primary" style={{ fontSize: "0.85rem" }}>
@@ -1091,7 +1287,7 @@ export default function TeamsPage() {
               </div>
             ) : (
               <div>
-                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.1rem", marginBottom: "1.25rem", color: "white" }}>
+                <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.1rem", marginBottom: "1.25rem", color: "var(--text-primary)" }}>
                   Your Active & Pending Rosters ({myAllTeams.length})
                 </h2>
                 
@@ -1114,37 +1310,37 @@ export default function TeamsPage() {
                           display: "flex", 
                           flexDirection: "column", 
                           justifyContent: "space-between",
-                          border: isPendingInvite ? "1px solid rgba(139, 92, 246, 0.4)" : "1px solid rgba(255, 255, 255, 0.08)",
-                          background: isPendingInvite ? "rgba(139, 92, 246, 0.04)" : "rgba(255, 255, 255, 0.02)",
+                          border: isPendingInvite ? "2px solid var(--color-primary)" : "2px solid var(--border)",
+                          background: isPendingInvite ? "var(--bg-elevated)" : "var(--bg-card)",
                           position: "relative"
                         }}
                       >
                         <div>
                           {/* Event & Status header */}
                           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.6rem" }}>
-                            <span style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", color: "#6366f1", background: "rgba(99,102,241,0.1)", padding: "0.15rem 0.5rem", borderRadius: "4px" }}>
+                            <span style={{ fontSize: "0.7rem", fontWeight: 800, textTransform: "uppercase", color: "var(--text-primary)", background: "var(--color-primary)", padding: "0.2rem 0.65rem", border: "1.5px solid var(--border)", borderRadius: "var(--radius-sm)", boxShadow: "1.5px 1.5px 0px 0px var(--shadow-color)" }}>
                               {team.event?.title || "Event"}
                             </span>
                             
                             {isPendingInvite && <span className="badge badge-warning" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem", animation: "pulse 2s infinite" }}>Invitation Pending</span>}
                             {isJoinRequested && <span className="badge badge-cyan" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem" }}>Request Sent</span>}
-                            {!isPendingInvite && !isJoinRequested && isOwner && <span className="badge badge-success" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem", background: "rgba(16,185,129,0.15)", color: "#10b981", border: "1px solid rgba(16,185,129,0.3)" }}>👑 Roster Owner</span>}
+                            {!isPendingInvite && !isJoinRequested && isOwner && <span className="badge badge-success" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem", background: "var(--color-success)", color: "var(--text-primary)", border: "2px solid var(--border)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}>👑 Roster Owner</span>}
                             {!isPendingInvite && !isJoinRequested && !isOwner && <span className="badge badge-success" style={{ fontSize: "0.65rem", padding: "0.15rem 0.45rem" }}>Joined Member</span>}
                           </div>
 
-                          <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.1rem", color: "white", marginBottom: "0.35rem" }}>
+                          <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1.1rem", color: "var(--text-primary)", marginBottom: "0.35rem" }}>
                             {team.name}
                           </h3>
                           
                           {team.description && (
-                            <p style={{ color: "var(--text-secondary)", fontSize: "0.78rem", lineHeight: 1.4, marginBottom: "1rem" }}>
+                            <p style={{ color: "var(--text-secondary)", fontSize: "0.78rem", lineHeight: 1.4, marginBottom: "1rem", fontWeight: 500 }}>
                               {team.description}
                             </p>
                           )}
 
                           {/* Member avatars */}
                           <div style={{ marginBottom: "1rem" }}>
-                            <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>
+                            <div style={{ fontSize: "0.68rem", color: "var(--text-secondary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>
                               Active Teammates ({acceptedMembers.length}{team.maxMembers ? `/${team.maxMembers}` : ""})
                             </div>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.35rem" }}>
@@ -1154,7 +1350,7 @@ export default function TeamsPage() {
                                   src={m.user.imageUrl ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(m.user.name)}&background=6366f1&color=fff`}
                                   alt={m.user.name}
                                   title={m.user.name}
-                                  style={{ width: 28, height: 28, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.06)", objectFit: "cover" }}
+                                  style={{ width: 28, height: 28, borderRadius: "50%", border: "1.5px solid var(--border)", objectFit: "cover" }}
                                 />
                               ))}
                             </div>
@@ -1163,13 +1359,13 @@ export default function TeamsPage() {
                           {/* Pending roster invites (For members already invited but haven't accepted yet) */}
                           {pendingMembers.length > 0 && (
                             <div style={{ marginBottom: "1.25rem" }}>
-                              <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>
+                              <div style={{ fontSize: "0.68rem", color: "var(--text-secondary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.4rem" }}>
                                 Awaiting Acceptance ({pendingMembers.length})
                               </div>
                               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.3rem" }}>
                                 {pendingMembers.map(m => m.user && (
-                                  <span key={m._id} style={{ display: "inline-flex", alignItems: "center", gap: "0.2rem", fontSize: "0.7rem", padding: "0.15rem 0.45rem", background: "rgba(245,158,11,0.05)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: "4px", color: "#f59e0b" }}>
-                                    ⏳ {m.user.name}
+                                  <span key={m._id} style={{ display: "inline-flex", alignItems: "center", gap: "0.2rem", fontSize: "0.7rem", padding: "0.2rem 0.5rem", background: "var(--bg-elevated)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", color: "var(--text-secondary)", fontWeight: 700 }}>
+                                    {m.user.name} (invited)
                                   </span>
                                 ))}
                               </div>
@@ -1178,14 +1374,14 @@ export default function TeamsPage() {
                         </div>
 
                         {/* Interactive Team Actions on the card itself */}
-                        <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "0.85rem", marginTop: "0.5rem" }}>
+                        <div style={{ borderTop: "2px dashed var(--border)", paddingTop: "0.85rem", marginTop: "0.5rem" }}>
                           {isPendingInvite ? (
                             <div style={{ display: "flex", gap: "0.5rem" }}>
                               <button
                                 onClick={() => handleAccept(team._id, user?._id)}
                                 disabled={loadingAction}
                                 className="btn-primary"
-                                style={{ flex: 1, fontSize: "0.78rem", padding: "0.45rem", background: "#10b981", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.3rem" }}
+                                style={{ flex: 1, fontSize: "0.78rem", padding: "0.45rem", background: "var(--color-success)", color: "var(--text-primary)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.3rem", borderRadius: "var(--radius-full)", boxShadow: "3px 3px 0px 0px var(--shadow-color)" }}
                               >
                                 {loadingAction ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
                                 Accept Team Invite
@@ -1194,7 +1390,7 @@ export default function TeamsPage() {
                                 onClick={() => handleDecline(team._id, user?._id)}
                                 disabled={loadingAction}
                                 className="btn-ghost"
-                                style={{ flex: 0.5, fontSize: "0.78rem", padding: "0.45rem", color: "#fca5a5", borderColor: "rgba(239,68,68,0.2)" }}
+                                style={{ flex: 0.5, fontSize: "0.78rem", padding: "0.45rem", color: "var(--color-danger)", border: "2px solid var(--border)", borderRadius: "var(--radius-full)", boxShadow: "2px 2px 0px 0px var(--shadow-color)", transform: "none" }}
                               >
                                 Decline
                               </button>
@@ -1203,9 +1399,9 @@ export default function TeamsPage() {
                             <button
                               disabled
                               className="btn-ghost"
-                              style={{ width: "100%", fontSize: "0.78rem", padding: "0.45rem", opacity: 0.6 }}
+                              style={{ width: "100%", fontSize: "0.78rem", padding: "0.45rem", opacity: 0.6, border: "2px solid var(--border)", borderRadius: "var(--radius-full)" }}
                             >
-                              ⏳ Requested to join, waiting for owner approval
+                              Requested to join, waiting for approval
                             </button>
                           ) : (
                             <div style={{ display: "flex", gap: "0.5rem" }}>
@@ -1213,7 +1409,7 @@ export default function TeamsPage() {
                                 <button
                                   onClick={() => setActiveManageTeam(team)}
                                   className="btn-primary"
-                                  style={{ flex: 1, fontSize: "0.78rem", padding: "0.45rem", background: "linear-gradient(135deg, #6366f1, #8b5cf6)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.3rem" }}
+                                  style={{ flex: 1, fontSize: "0.78rem", padding: "0.45rem", background: "var(--color-primary)", color: "white", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.3rem", borderRadius: "var(--radius-full)" }}
                                 >
                                   <Settings size={13} />
                                   Manage Roster & Invites
@@ -1226,7 +1422,7 @@ export default function TeamsPage() {
                                     }
                                   }}
                                   className="btn-ghost"
-                                  style={{ flex: 1, fontSize: "0.78rem", padding: "0.45rem", color: "#ef4444", borderColor: "rgba(239,68,68,0.15)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.3rem" }}
+                                  style={{ flex: 1, fontSize: "0.78rem", padding: "0.45rem", color: "var(--color-danger)", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.3rem", borderRadius: "var(--radius-full)", border: "2px solid var(--border)", boxShadow: "2px 2px 0px 0px var(--shadow-color)", transform: "none" }}
                                 >
                                   <LogOut size={13} />
                                   Leave Team
@@ -1247,14 +1443,14 @@ export default function TeamsPage() {
         {/* TAB 3: CAMPUS DIRECTORY & DIRECT QUICK-INVITE HUB */}
         {activeTab === "directory" && (
           <div>
-            <div className="glass-card" style={{ padding: "1.5rem", marginBottom: "1.5rem", border: "1px solid rgba(6,182,212,0.15)" }}>
+            <div className="glass-card" style={{ padding: "1.5rem", marginBottom: "1.5rem" }}>
               <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
                 <div>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1rem", color: "#67e8f9", display: "flex", alignItems: "center", gap: "0.4rem" }}>
-                    <Sparkles size={16} color="#06b6d4" />
+                  <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "1rem", color: "var(--text-primary)", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                    <Sparkles size={16} color="var(--color-primary)" />
                     Campus Directory & Direct Teammate Invite Hub
                   </h3>
-                  <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "0.2rem" }}>
+                  <p style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "0.2rem", fontWeight: 500 }}>
                     Search classmate profiles, inspect interest/skill alignment scores, and dispatch team requests in one click.
                   </p>
                 </div>
@@ -1262,31 +1458,32 @@ export default function TeamsPage() {
                 {/* Team selection dropdown container */}
                 {ownedTeams.length > 0 ? (
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", fontWeight: 600 }}>Invite Target Team:</span>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)", fontWeight: 700 }}>Invite Target Team:</span>
                     <select
                       value={selectedInviteTeamId}
                       onChange={(e) => setSelectedInviteTeamId(e.target.value)}
                       style={{
-                        background: "rgba(0,0,0,0.5)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        color: "white",
+                        background: "var(--bg-card)",
+                        border: "2px solid var(--border)",
+                        color: "var(--text-primary)",
                         padding: "0.4rem 0.8rem",
-                        borderRadius: "var(--radius-md)",
+                        borderRadius: "var(--radius-sm)",
                         fontSize: "0.78rem",
                         outline: "none",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        fontWeight: 700
                       }}
                     >
                       {ownedTeams.map(t => (
-                        <option key={t._id} value={t._id} style={{ background: "#0a0f1e" }}>
+                        <option key={t._id} value={t._id} style={{ background: "var(--bg-card)", color: "var(--text-primary)" }}>
                           {t.name} ({t.event?.title})
                         </option>
                       ))}
                     </select>
                   </div>
                 ) : (
-                  <div style={{ fontSize: "0.75rem", color: "#f59e0b", background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.15)", padding: "0.35rem 0.75rem", borderRadius: "var(--radius-md)" }}>
-                    ⚠️ You must own a team first to invite classmates. Create one in the first tab!
+                  <div style={{ fontSize: "0.75rem", color: "var(--text-primary)", background: "var(--bg-elevated)", border: "2px solid var(--border)", padding: "0.35rem 0.75rem", borderRadius: "var(--radius-sm)", fontWeight: 600 }}>
+                    You must own a team first to invite classmates. Create one in the first tab!
                   </div>
                 )}
               </div>
@@ -1307,27 +1504,27 @@ export default function TeamsPage() {
 
             {/* Directory Query Results */}
             {!directoryQuery ? (
-              <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center" }}>
-                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🧭</div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "white", marginBottom: "0.5rem" }}>
-                  Search for Campus Peers to Assemble Teams
+              <div className="glass-card" style={{ padding: "4rem 2rem", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", borderStyle: "dashed" }}>
+                <Users size={48} style={{ marginBottom: "1rem", color: "var(--text-secondary)", opacity: 0.5 }} />
+                <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "0.5rem" }}>
+                  Search for Classmates to Invite
                 </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", maxWidth: "450px", margin: "0 auto" }}>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", maxWidth: "450px", margin: "0 auto", fontWeight: 500 }}>
                   Type a name or skill above. You will see their exact properly-weighted compatibilities, matching skills, and interest badges instantly!
                 </p>
               </div>
             ) : directoryResults === undefined ? (
               <div style={{ display: "flex", justifyContent: "center", padding: "3rem" }}>
-                <Loader2 size={32} color="#6366f1" className="animate-spin" />
+                <Loader2 size={32} color="var(--color-primary)" className="animate-spin" />
               </div>
             ) : directoryResults.length === 0 || (directoryResults.length === 1 && directoryResults[0]._id === user?._id) ? (
-              <div className="glass-card" style={{ padding: "3rem 1.5rem", textAlign: "center" }}>
-                <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+              <div className="glass-card" style={{ padding: "3rem 1.5rem", textAlign: "center", borderStyle: "dashed" }}>
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", fontWeight: 500 }}>
                   No classmates found matching "{directoryQuery}"
                 </p>
               </div>
             ) : (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))", gap: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(310px, 1fr))", gap: "1.5rem" }}>
                 {directoryResults.filter(p => p._id !== user?._id).map((peer) => {
                   const score = calculateCompatibility(peer);
                   const label = getMatchLabel(score);
@@ -1352,7 +1549,8 @@ export default function TeamsPage() {
                         display: "flex", 
                         flexDirection: "column", 
                         justifyContent: "space-between",
-                        border: "1px solid rgba(255, 255, 255, 0.05)"
+                        border: "2px solid var(--border)",
+                        boxShadow: "3px 3px 0px 0px var(--shadow-color)"
                       }}
                     >
                       <div>
@@ -1361,21 +1559,22 @@ export default function TeamsPage() {
                           <img
                             src={peer.imageUrl ?? `https://ui-avatars.com/api/?name=${encodeURIComponent(peer.name)}&background=6366f1&color=fff`}
                             alt={peer.name}
-                            style={{ width: 44, height: 44, borderRadius: "50%", border: "2px solid rgba(255,255,255,0.06)", objectFit: "cover" }}
+                            style={{ width: 44, height: 44, borderRadius: "50%", border: "1.5px solid var(--border)", objectFit: "cover" }}
                           />
                           <div>
-                            <h4 style={{ fontWeight: 700, color: "white", fontSize: "0.92rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                            <h4 style={{ fontWeight: 800, color: "var(--text-primary)", fontSize: "0.92rem", display: "flex", alignItems: "center", gap: "0.3rem" }}>
                               {peer.name}
                             </h4>
-                            <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem" }}>
+                            <p style={{ color: "var(--text-secondary)", fontSize: "0.75rem", fontWeight: 500 }}>
                               {peer.department || "No Dept"} · {peer.year || "Unknown"}
                             </p>
                             
                             {/* Score Tag */}
                             <span style={{
                               display: "inline-flex", alignItems: "center", gap: "0.2rem",
-                              fontSize: "0.65rem", fontWeight: 700, color: label.color,
+                              fontSize: "0.65rem", fontWeight: 800, color: label.color,
                               background: label.bg, padding: "0.15rem 0.45rem", borderRadius: "9999px",
+                              border: `1.5px solid ${label.color}`,
                               marginTop: "0.3rem"
                             }}>
                               <Sparkles size={9} />
@@ -1387,7 +1586,7 @@ export default function TeamsPage() {
                         {/* Skills display */}
                         {peer.skills && peer.skills.length > 0 && (
                           <div style={{ marginBottom: "0.75rem" }}>
-                            <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.3rem" }}>
+                            <div style={{ fontSize: "0.65rem", color: "var(--text-secondary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.3rem" }}>
                               Skills
                             </div>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
@@ -1395,11 +1594,11 @@ export default function TeamsPage() {
                                 const isMutual = user?.skills?.includes(skill);
                                 return (
                                   <span key={i} style={{
-                                    fontSize: "0.65rem", padding: "0.1rem 0.4rem", borderRadius: "var(--radius-sm)",
-                                    background: isMutual ? "rgba(99,102,241,0.12)" : "rgba(255,255,255,0.02)",
-                                    color: isMutual ? "#a5b4fc" : "var(--text-secondary)",
-                                    border: `1px solid ${isMutual ? "rgba(99,102,241,0.22)" : "rgba(255,255,255,0.05)"}`,
-                                    fontWeight: isMutual ? 600 : 400
+                                    fontSize: "0.65rem", padding: "0.15rem 0.45rem", borderRadius: "var(--radius-sm)",
+                                    background: isMutual ? "var(--color-primary)" : "var(--bg-elevated)",
+                                    color: isMutual ? "white" : "var(--text-secondary)",
+                                    border: "1.5px solid var(--border)",
+                                    fontWeight: 700
                                   }}>
                                     {skill}
                                   </span>
@@ -1412,7 +1611,7 @@ export default function TeamsPage() {
                         {/* Interests display */}
                         {peer.interests && peer.interests.length > 0 && (
                           <div style={{ marginBottom: "1rem" }}>
-                            <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.3rem" }}>
+                            <div style={{ fontSize: "0.65rem", color: "var(--text-secondary)", fontWeight: 700, textTransform: "uppercase", marginBottom: "0.3rem" }}>
                               Interests
                             </div>
                             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.25rem" }}>
@@ -1420,11 +1619,11 @@ export default function TeamsPage() {
                                 const isMutual = user?.interests?.includes(interest);
                                 return (
                                   <span key={i} style={{
-                                    fontSize: "0.65rem", padding: "0.1rem 0.4rem", borderRadius: "var(--radius-sm)",
-                                    background: isMutual ? "rgba(6,182,212,0.12)" : "rgba(255,255,255,0.02)",
-                                    color: isMutual ? "#67e8f9" : "var(--text-secondary)",
-                                    border: `1px solid ${isMutual ? "rgba(6,182,212,0.22)" : "rgba(255,255,255,0.05)"}`,
-                                    fontWeight: isMutual ? 600 : 400
+                                    fontSize: "0.65rem", padding: "0.15rem 0.45rem", borderRadius: "var(--radius-sm)",
+                                    background: isMutual ? "var(--color-secondary)" : "var(--bg-elevated)",
+                                    color: isMutual ? "white" : "var(--text-secondary)",
+                                    border: "1.5px solid var(--border)",
+                                    fontWeight: 700
                                   }}>
                                     {interest}
                                   </span>
@@ -1436,18 +1635,18 @@ export default function TeamsPage() {
                       </div>
 
                       {/* Connection connection status & buttons */}
-                      <div style={{ borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: "0.75rem", marginTop: "0.5rem" }}>
+                      <div style={{ borderTop: "2px dashed var(--border)", paddingTop: "0.75rem", marginTop: "0.5rem" }}>
                         {ownedTeams.length === 0 ? (
-                          <button disabled className="btn-ghost" style={{ width: "100%", fontSize: "0.72rem", padding: "0.4rem", opacity: 0.5 }}>
+                          <button disabled className="btn-ghost" style={{ width: "100%", fontSize: "0.72rem", padding: "0.4rem", opacity: 0.5, border: "2px solid var(--border)" }}>
                             No team to invite to
                           </button>
                         ) : isCreatorOfTeam || isAccepted ? (
-                          <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem", fontSize: "0.75rem", color: "#10b981", padding: "0.4rem", background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.15)", borderRadius: "var(--radius-md)" }}>
+                          <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem", fontSize: "0.75rem", color: "var(--text-primary)", padding: "0.4rem", background: "var(--color-success)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", fontWeight: 700, boxShadow: "1.5px 1.5px 0px 0px var(--shadow-color)" }}>
                             <Check size={13} /> Active Member
                           </span>
                         ) : isPending ? (
-                          <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem", fontSize: "0.75rem", color: "#f59e0b", padding: "0.4rem", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.15)", borderRadius: "var(--radius-md)" }}>
-                            ⏳ Invite Pending
+                          <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "0.25rem", fontSize: "0.75rem", color: "var(--text-primary)", padding: "0.4rem", background: "var(--color-accent)", border: "2px solid var(--border)", borderRadius: "var(--radius-sm)", fontWeight: 700, boxShadow: "1.5px 1.5px 0px 0px var(--shadow-color)" }}>
+                             Invite Pending
                           </span>
                         ) : isRequested ? (
                           <div style={{ display: "flex", gap: "0.35rem" }}>
@@ -1455,7 +1654,7 @@ export default function TeamsPage() {
                               onClick={() => handleAccept(selectedInviteTeamId, peer._id)}
                               disabled={loadingAction}
                               className="btn-primary"
-                              style={{ flex: 1, fontSize: "0.7rem", padding: "0.35rem", background: "#10b981" }}
+                              style={{ flex: 1, fontSize: "0.7rem", padding: "0.35rem", background: "var(--color-success)", color: "var(--text-primary)", border: "2px solid var(--border)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}
                             >
                               Approve Request
                             </button>
@@ -1463,7 +1662,7 @@ export default function TeamsPage() {
                               onClick={() => handleDecline(selectedInviteTeamId, peer._id)}
                               disabled={loadingAction}
                               className="btn-ghost"
-                              style={{ fontSize: "0.7rem", padding: "0.35rem", color: "#fca5a5" }}
+                              style={{ fontSize: "0.7rem", padding: "0.35rem", color: "var(--color-danger)", border: "2px solid var(--border)", boxShadow: "2px 2px 0px 0px var(--shadow-color)" }}
                             >
                               Deny
                             </button>
@@ -1473,7 +1672,7 @@ export default function TeamsPage() {
                             onClick={() => handleInviteFromDirectory(peer.email, selectedInviteTeamId)}
                             disabled={loadingAction}
                             className="btn-primary"
-                            style={{ width: "100%", fontSize: "0.75rem", padding: "0.4rem", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.25rem" }}
+                            style={{ width: "100%", fontSize: "0.75rem", padding: "0.5rem", display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.25rem", borderRadius: "var(--radius-full)" }}
                           >
                             {loadingAction ? <Loader2 size={12} className="animate-spin" /> : <UserPlus size={12} />}
                             Invite to Team

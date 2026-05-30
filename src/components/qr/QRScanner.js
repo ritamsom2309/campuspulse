@@ -1,6 +1,7 @@
 "use client";
 // modify to check git part 2
 import { useEffect, useRef, useState } from "react";
+import { Camera, Focus } from "lucide-react";
 
 /**
  * QR Scanner component using html5-qrcode.
@@ -224,9 +225,9 @@ export function QRScanner({ onScan, onError }) {
             className={`absolute bottom-20 px-4 py-2 rounded-lg font-medium text-xs transition-all duration-200 ${isFocused
               ? "bg-cyan-500/90 text-white shadow-lg shadow-cyan-500/50"
               : "bg-cyan-500/30 text-cyan-200 hover:bg-cyan-500/50"
-              } border border-cyan-400/50`}
+              } border border-cyan-400/50 flex items-center justify-center gap-1.5`}
           >
-            📍 Focus
+            <Focus size={13} /> Focus
           </button>
         </div>
       )}
@@ -248,8 +249,8 @@ export function QRScanner({ onScan, onError }) {
       {/* Error/Denied State */}
       {hasPermission === false && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-950 z-20 p-6 text-center">
-          <div className="w-14 h-14 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl flex items-center justify-center mb-4 text-2xl">
-            📷
+          <div className="w-14 h-14 bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl flex items-center justify-center mb-4">
+            <Camera size={24} />
           </div>
           <h3 className="text-white font-semibold text-lg mb-1">Camera Access Required</h3>
           <p className="text-red-300 text-xs mb-6 px-4 leading-relaxed max-w-xs">

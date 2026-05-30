@@ -150,6 +150,22 @@ export default function DashboardPage() {
             There are <span style={{ color: "var(--color-primary)", fontWeight: 700 }}>{events?.length ?? 0} campus events</span> available to explore.
             {unreadCount > 0 && ` You have ${unreadCount} new notifications in your log.`}
           </p>
+          <div style={{ marginTop: "1.25rem" }}>
+            <Link
+              href="/recommendations"
+              className="btn-primary"
+              style={{
+                fontSize: "0.78rem",
+                padding: "0.55rem 1.25rem",
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
+            >
+              <Sparkles size={14} style={{ filter: "drop-shadow(0 0 4px rgba(255,255,255,0.6))" }} /> Compute AI Matches
+            </Link>
+          </div>
         </div>
 
         {/* Tactile pop stat indicators */}

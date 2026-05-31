@@ -95,8 +95,12 @@ export default function DashboardPage() {
 
   // Redirect to onboarding if not complete
   useEffect(() => {
-    if (isLoaded && user && !user.onboardingComplete) {
-      router.push("/onboarding");
+    if (isLoaded && user) {
+      if (!user.onboardingComplete) {
+        router.push("/onboarding");
+      } else if (user.role === "provider") {
+        router.push("/provider");
+      }
     }
   }, [isLoaded, user, router]);
 

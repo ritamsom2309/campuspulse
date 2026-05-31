@@ -9,12 +9,14 @@ import { useState } from "react";
 import {
   Settings, Users, Calendar, Edit3,
   Archive, Eye, Shield, Trash2, UserPlus, Loader2,
-  Laptop, Trophy, Palette, Pin
+  Laptop, Trophy, Palette, Pin, Building
 } from "lucide-react";
 import { formatDate, isDeadlinePassed } from "../../lib/utils/formatDate";
 
-function EventRow({ event, onArchive }) {
+function EventRow({ event, venueState, onArchive }) {
   const deadlinePassed = isDeadlinePassed(event.registrationDeadline);
+  const bookingStatus = venueState?.status;
+  const bookedVenueName = venueState?.venueName;
 
   return (
     <div
@@ -51,10 +53,74 @@ function EventRow({ event, onArchive }) {
           <span style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
             <Eye size={11} />{event.viewCount ?? 0} views
           </span>
+          {bookingStatus === "confirmed" ? (
+            <span style={{ display: "flex", alignItems: "center", gap: "0.3rem", color: "#10b981", fontWeight: "700" }}>
+              <Building size={11} /> Secured: {bookedVenueName}
+            </span>
+          ) : bookingStatus === "accepted" ? (
+            <span style={{ display: "flex", alignItems: "center", gap: "0.3rem", color: "#f59e0b", fontWeight: "700" }}>
+              <Building size={11} /> Approved: {bookedVenueName}
+            </span>
+          ) : bookingStatus === "pending" ? (
+            <span style={{ display: "flex", alignItems: "center", gap: "0.3rem", color: "#6366f1", fontWeight: "600" }}>
+              <Building size={11} /> Requested: {bookedVenueName}
+            </span>
+          ) : (
+            <span style={{ display: "flex", alignItems: "center", gap: "0.3rem" }}>
+              <Building size={11} /> Venue: {event.venue}
+            </span>
+          )}
         </div>
       </div>
 
       <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+        {bookingStatus === "confirmed" || bookingStatus === "accepted" ? (
+          <Link
+            href={`/organizer/venue?eventId=${event._id}`}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.35rem", 
+              textDecoration: "none", 
+              background: "#10b981", 
+              border: "2px solid var(--border)", 
+              borderRadius: "0px", 
+              padding: "0.4rem 0.75rem", 
+              color: "#FFFFFF", 
+              fontSize: "0.78rem", 
+              fontWeight: 800,
+              textTransform: "uppercase",
+              boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+              cursor: "pointer",
+              transition: "all 0.15s ease"
+            }}
+          >
+            <Building size={13} /> Venue Confirmed
+          </Link>
+        ) : (
+          <Link
+            href={`/organizer/venue?eventId=${event._id}`}
+            style={{ 
+              display: "flex", 
+              alignItems: "center", 
+              gap: "0.35rem", 
+              textDecoration: "none", 
+              background: "var(--color-primary)", 
+              border: "2px solid var(--border)", 
+              borderRadius: "0px", 
+              padding: "0.4rem 0.75rem", 
+              color: "#FFFFFF", 
+              fontSize: "0.78rem", 
+              fontWeight: 800,
+              textTransform: "uppercase",
+              boxShadow: "2px 2px 0px 0px var(--shadow-color)",
+              cursor: "pointer",
+              transition: "all 0.15s ease" 
+            }}
+          >
+            <Building size={13} /> Find Venue
+          </Link>
+        )}
         <Link
           href={`/events/${event._id}`}
           style={{ 
@@ -64,7 +130,7 @@ function EventRow({ event, onArchive }) {
             textDecoration: "none", 
             background: "var(--bg-card)", 
             border: "2px solid var(--border)", 
-            borderRadius: "var(--radius-sm)", 
+            borderRadius: "0px", 
             padding: "0.4rem 0.75rem", 
             color: "var(--text-primary)", 
             fontSize: "0.78rem", 
@@ -75,7 +141,7 @@ function EventRow({ event, onArchive }) {
             transition: "all 0.15s ease" 
           }}
         >
-          <Eye size={13} />View Page
+          <Eye size={13} /> View Page
         </Link>
         {event.organizerRole === "owner" && deadlinePassed && !event.isArchived && (
           <button
@@ -97,13 +163,14 @@ function EventRow({ event, onArchive }) {
               transition: "all 0.15s ease" 
             }}
           >
-            <Archive size={13} />Archive
+            <Archive size={13} /> Archive
           </button>
         )}
       </div>
     </div>
   );
 }
+
 
 export default function OrganizerPage() {
   const { user } = useCurrentUser();
@@ -118,6 +185,26 @@ export default function OrganizerPage() {
     api.analytics.getOrganizerDashboardStats,
     user ? { userId: user._id } : "skip"
   );
+  const venueRequests = useQuery(
+    api.venues.getOrganizerVenueRequests,
+    user ? { organizerId: user._id } : "skip"
+  );
+
+  const venueRequestsMap = {};
+  if (venueRequests) {
+    venueRequests.forEach(({ request, venue }) => {
+      const eventId = request.eventId;
+      const current = venueRequestsMap[eventId];
+      if (!current || 
+          request.status === "confirmed" || 
+          (request.status === "accepted" && current.status !== "confirmed")) {
+        venueRequestsMap[eventId] = {
+          status: request.status,
+          venueName: venue.name,
+        };
+      }
+    });
+  }
 
   const handleArchive = async (eventId) => {
     if (!confirm("Archive this event? This will mark it as complete and create friendships between team members.")) return;
@@ -195,11 +282,12 @@ export default function OrganizerPage() {
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {activeEvents.map((event) => (
-                <EventRow key={event._id} event={event} onArchive={handleArchive} />
+                <EventRow key={event._id} event={event} venueState={venueRequestsMap[event._id]} onArchive={handleArchive} />
               ))}
             </div>
           )}
         </div>
+
 
         {/* Archived Events */}
         {archivedEvents.length > 0 && (

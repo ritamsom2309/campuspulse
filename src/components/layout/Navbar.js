@@ -28,6 +28,7 @@ import {
   UserCheck,
   Megaphone,
   Settings,
+  Building,
 } from "lucide-react";
 import { getRelativeTime } from "../../lib/utils/formatDate";
 
@@ -37,6 +38,7 @@ const navLinks = [
   { href: "/teams", label: "Teams", icon: Users },
   { href: "/friends", label: "Friends", icon: Users },
   { href: "/profile", label: "Profile", icon: User },
+  { href: "/provider", label: "Venue Console", icon: Building },
 ];
 
 const notificationIcons = {
@@ -54,6 +56,13 @@ export default function Navbar() {
   const { user } = useCurrentUser();
   const { notifications, unreadCount, markAsRead, markAllAsRead } =
     useNotifications(user?._id);
+
+  const filteredLinks = navLinks.filter(({ href }) => {
+    if (user?.role === "provider") {
+      return href === "/provider" || href === "/profile";
+    }
+    return href !== "/provider";
+  });
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -425,21 +434,42 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* Venue Console button */}
+            {user?.role === "provider" && (
+              <Link 
+                href="/provider" 
+                className="btn-ghost hidden-mobile" 
+                style={{ 
+                  fontSize: "0.75rem", 
+                  padding: "0.5rem 1.35rem", 
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  borderRadius: "0px",
+                  marginRight: "0.5rem"
+                }}
+              >
+                Venue Console
+              </Link>
+            )}
+
             {/* Create Event structured as pill candy primary button */}
-            <Link 
-              href="/events/create" 
-              className="btn-primary" 
-              style={{ 
-                fontSize: "0.75rem", 
-                padding: "0.5rem 1.35rem", 
-                textDecoration: "none",
-                display: "inline-flex",
-                alignItems: "center",
-                borderRadius: "0px"
-              }}
-            >
-              + Create Event
-            </Link>
+            {user?.role !== "provider" && (
+              <Link 
+                href="/events/create" 
+                className="btn-primary" 
+                style={{ 
+                  fontSize: "0.75rem", 
+                  padding: "0.5rem 1.35rem", 
+                  textDecoration: "none",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  borderRadius: "0px"
+                }}
+              >
+                + Create Event
+              </Link>
+            )}
 
             {/* User Avatar fitted in thick-bordered circle */}
             <div style={{
@@ -503,7 +533,7 @@ export default function Navbar() {
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {navLinks.map(({ href, label, icon: Icon }) => {
+            {filteredLinks.map(({ href, label, icon: Icon }) => {
               const isActive = pathname.startsWith(href);
               return (
                 <Link

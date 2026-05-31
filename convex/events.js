@@ -36,7 +36,11 @@ export const getEventById = query({
     const event = await ctx.db.get(eventId);
     if (!event) return null;
     const creator = await ctx.db.get(event.createdBy);
-    return { ...event, creator };
+
+    return { 
+      ...event, 
+      creator 
+    };
   },
 });
 

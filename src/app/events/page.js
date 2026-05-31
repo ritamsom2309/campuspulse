@@ -198,7 +198,15 @@ export default function EventsPage() {
         </div>
 
         {/* Category Pills Tabs */}
-        <div style={{ display: "flex", gap: "0.45rem", marginBottom: "2.5rem", overflowX: "auto", paddingBottom: "0.5rem" }}>
+        <div style={{
+          display: "flex",
+          gap: "0.45rem",
+          marginBottom: "2.5rem",
+          overflowX: "auto",
+          /* padding gives shadow + transform room so active pill never clips */
+          padding: "4px 2px 10px 4px",
+          scrollbarWidth: "none",
+        }}>
           {CATEGORIES.map((cat) => {
             const isActive = category === cat;
             return (
@@ -219,9 +227,11 @@ export default function EventsPage() {
                   textTransform: "uppercase",
                   cursor: "pointer",
                   whiteSpace: "nowrap",
+                  flexShrink: 0,
                   transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                  /* lift up instead of negative translate so shadow stays in frame */
                   boxShadow: isActive ? "3px 3px 0px 0px var(--shadow-color)" : "1.5px 1.5px 0px 0px var(--shadow-color)",
-                  transform: isActive ? "translate(-1.5px, -1.5px)" : "translate(0, 0)",
+                  transform: isActive ? "translateY(-2px)" : "translateY(0)",
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {

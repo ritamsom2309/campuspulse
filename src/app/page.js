@@ -16,6 +16,8 @@ import {
   Calendar,
   Trophy,
   CheckCircle2,
+  Building2,
+  MapPin,
 } from "lucide-react";
 
 const features = [
@@ -73,6 +75,15 @@ const features = [
     bg: "rgba(244,114,182,0.08)",
     tag: "NOTIFICATIONS",
   },
+  {
+    icon: MapPin,
+    title: "Venue Booking",
+    description:
+      "Browse and request campus venues for your events. Venue providers can list spaces, set availability, and manage inbound booking requests.",
+    color: "var(--color-success)",
+    bg: "rgba(52,211,153,0.08)",
+    tag: "VENUE BOOKING",
+  },
 ];
 
 const stats = [
@@ -86,11 +97,11 @@ const benefits = [
   "Discover events matched to your interests",
   "Connect with friends attending the same events",
   "Check in instantly with your personal QR code",
-  "Get AI-powered recommendations every week",
+  "Book campus venues or list your own space",
 ];
 
 const marqueeText =
-  "HACKATHONS // DANCE CLUBS // ROBOTICS SEMINARS // PEER MATCHING // GEMINI RECOMMENDATIONS // TECH TALKS // CULTURAL FESTS // SPORTS EVENTS // HACKATHONS // DANCE CLUBS // ROBOTICS SEMINARS // PEER MATCHING // GEMINI RECOMMENDATIONS // TECH TALKS // CULTURAL FESTS // SPORTS EVENTS //";
+  "HACKATHONS // VENUE BOOKING // DANCE CLUBS // ROBOTICS SEMINARS // PEER MATCHING // TECH TALKS // CULTURAL FESTS // SPORTS EVENTS // VENUE PROVIDERS // CAMPUS SPACES // QR CHECK-IN // TEAM BUILDING // VENUE BOOKING // DANCE CLUBS // ROBOTICS SEMINARS // PEER MATCHING // TECH TALKS // CULTURAL FESTS // SPORTS EVENTS //";
 
 export default function LandingPage() {
   const { user, isSignedIn } = useCurrentUser();
@@ -151,52 +162,7 @@ export default function LandingPage() {
             </span>
           </div>
 
-          {/* CTA buttons */}
-          <div style={{ display: "flex", gap: "0.65rem", alignItems: "center" }}>
-            {isSignedIn ? (
-              user?.role === "provider" ? (
-                <Link
-                  href="/provider"
-                  className="btn-primary animate-wiggle"
-                  style={{ textDecoration: "none", fontSize: "0.78rem", padding: "0.45rem 1.25rem", borderRadius: "0px" }}
-                >
-                  Venue Console <ArrowRight size={12} strokeWidth={2.5} />
-                </Link>
-              ) : (
-                <Link
-                  href="/dashboard"
-                  className="btn-primary"
-                  style={{ textDecoration: "none", fontSize: "0.78rem", padding: "0.45rem 1.25rem", borderRadius: "0px" }}
-                >
-                  Go to Dashboard <ArrowRight size={12} strokeWidth={2.5} />
-                </Link>
-              )
-            ) : (
-              <>
-                <Link
-                  href="/provider"
-                  className="btn-ghost"
-                  style={{ textDecoration: "none", fontSize: "0.78rem", padding: "0.45rem 1.15rem", color: "var(--color-primary)", fontWeight: 700 }}
-                >
-                  List Your Venue
-                </Link>
-                <Link
-                  href="/sign-in"
-                  className="btn-ghost"
-                  style={{ textDecoration: "none", fontSize: "0.78rem", padding: "0.45rem 1.15rem" }}
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/sign-up"
-                  className="btn-primary"
-                  style={{ textDecoration: "none", fontSize: "0.78rem", padding: "0.45rem 1.25rem", borderRadius: "0px" }}
-                >
-                  Get Started <ArrowRight size={12} strokeWidth={2.5} />
-                </Link>
-              </>
-            )}
-          </div>
+
         </div>
       </header>
 
@@ -330,8 +296,7 @@ export default function LandingPage() {
             fontFamily: "var(--font-sans)",
           }}
         >
-          Discover events tailored to your interests, form teams with friends,
-          and check in instantly with your personal QR code.
+          Discover events, form teams, book campus venues, and check in instantly — everything your campus life needs in one place.
         </p>
 
         {/* Hero CTA buttons */}
@@ -378,28 +343,50 @@ export default function LandingPage() {
               </Link>
               <Link
                 href="/provider"
-                className="btn-ghost"
+                className="btn-secondary"
                 style={{
                   textDecoration: "none",
                   fontSize: "0.88rem",
                   padding: "0.9rem 2.25rem",
-                  borderColor: "var(--color-primary)",
-                  color: "var(--color-primary)",
-                  borderRadius: "0px",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
                 }}
               >
-                List Your Venue
+                <Building2 size={15} strokeWidth={2.5} />
+                Venue Console
               </Link>
             </>
           )}
           <Link
             href="/events"
-            className="btn-ghost"
             style={{
               textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
               fontSize: "0.88rem",
               padding: "0.9rem 2.25rem",
-              borderRadius: "0px",
+              background: "var(--color-secondary)",
+              color: "#FFFFFF",
+              border: "2px solid var(--border)",
+              borderRadius: "var(--radius-full)",
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.04em",
+              boxShadow: "4px 4px 0px 0px var(--shadow-color)",
+              transition: "all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#ec4899";
+              e.currentTarget.style.transform = "translate(-2px, -2px)";
+              e.currentTarget.style.boxShadow = "6px 6px 0px 0px var(--shadow-color)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "var(--color-secondary)";
+              e.currentTarget.style.transform = "translate(0, 0)";
+              e.currentTarget.style.boxShadow = "4px 4px 0px 0px var(--shadow-color)";
             }}
           >
             <Calendar size={14} strokeWidth={2.5} />
